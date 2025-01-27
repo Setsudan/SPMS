@@ -1,0 +1,19 @@
+name: Deploy to Kubernetes
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build & Push Docker Image
+        run: |
+          docker build -t your-docker-image .
+          docker push your-docker-image
+      - name: Apply K8s Manifests
+        run: |
+          kubectl apply -f infra/k8s/deployment.yaml

@@ -1,0 +1,23 @@
+.stats-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+h2,
+h3 {
+  margin-top: 20px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 5px;
+}
+
+canvas {
+  max-width: 100%;
+  height: auto;
+}

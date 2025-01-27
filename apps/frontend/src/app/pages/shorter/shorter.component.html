@@ -1,0 +1,26 @@
+<div class="shorter-container">
+  <h2>Your Shortened URLs</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Short URL</th>
+        <th>Original URL</th>
+        <th>Clicks</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let url of urls">
+        <td>
+          <a [href]="url.shortUrl" target="_blank">{{ url.shortUrl }}</a>
+        </td>
+        <td>{{ url.longUrl }}</td>
+        <td>{{ url.clicks }}</td>
+        <td>
+          <button (click)="deleteUrl(url.id)">Delete</button>
+          <button [routerLink]="['/stats', url.shortUrl]">View Stats</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// **Users Table (Optional Auth)**
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  urls Url[]
+}
+
+/// **Main URL Model**
+model Url {
+  id        String    @id @default(uuid())
+  original  String
+  short     String    @unique
+  clicks    Int       @default(0)
+  createdAt DateTime  @default(now())
+  expiresAt DateTime?
+  userAgent String?
+
+  userId String? // Optional (guest users won't have a userId)
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  logs  LogEntry[]
+  stats UrlStats?
+}
+
+/// **Logs Every Click on a Shortened URL**
+model LogEntry {
+  id        String   @id @default(uuid())
+  urlId     String
+  ipAddress String
+  userAgent String?
+  country   String?
+  referrer  String?
+  timestamp DateTime @default(now())
+
+  url Url @relation(fields: [urlId], onDelete: Cascade, references: [id])
+}
+
+/// **Aggregated Stats (Precomputed for Performance)**
+model UrlStats {
+  urlId          String    @id
+  totalClicks    Int       @default(0)
+  lastAccess     DateTime?
+  uniqueVisitors Int       @default(0)
+
+  url Url @relation(fields: [urlId], references: [id], onDelete: Cascade)
+}

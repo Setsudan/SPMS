@@ -1,0 +1,29 @@
+<div class="stats-container">
+  <h2>URL Statistics</h2>
+  <div *ngIf="stats">
+    <p>
+      Short URL:
+      <a [href]="stats.shortUrl" target="_blank">{{ stats.shortUrl }}</a>
+    </p>
+    <p>Original URL: {{ stats.longUrl }}</p>
+    <p>Total Clicks: {{ stats.totalClicks }}</p>
+    <p>Unique Visitors: {{ stats.uniqueVisitors }}</p>
+
+    <h3>Clicks Over Time</h3>
+    <canvas id="clicksChart"></canvas>
+
+    <h3>Top Referring Sites</h3>
+    <ul>
+      <li *ngFor="let referrer of stats.topReferrers">
+        {{ referrer.site }}: {{ referrer.count }} clicks
+      </li>
+    </ul>
+
+    <h3>Visitor Country Distribution</h3>
+    <ul>
+      <li *ngFor="let country of stats.countryDistribution">
+        {{ country.name }}: {{ country.count }} visitors
+      </li>
+    </ul>
+  </div>
+</div>
