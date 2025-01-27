@@ -10,10 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Build & Push Docker Image
+
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build & Push Docker Images using Docker Compose
         run: |
-          docker build -t ethlny-url-shortener .
-          docker push ethlny-url-shortener
+          docker-compose -f infra/docker-compose.yaml build
+          docker-compose -f infra/docker-compose.yaml push
+
       - name: Apply K8s Manifests
         run: |
           kubectl apply -f infra/k8s/deployment.yaml
