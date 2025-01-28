@@ -7,52 +7,86 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// **Users Table (Optional Auth)**
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
+  id        String  @id @default(uuid())
+  name      String
+  face      String? // Profile picture (URL or base64)
+  bio       String? // Short description about themselves
+  classId   String
+  class     Class   @relation(fields: [classId], references: [id])
+  skills    StudentSkill[]
+  socialLinks SocialLink[]
+  juniors   Mentorship[] @relation("SeniorToJunior")
+  seniors   Mentorship[] @relation("JuniorToSenior")
+  requestsSent Request[] @relation("RequestSender")
+  requestsReceived Request[] @relation("RequestReceiver")
+  messages  Message[]
   createdAt DateTime @default(now())
-
-  urls Url[]
 }
 
-/// **Main URL Model**
-model Url {
-  id        String    @id @default(uuid())
-  original  String
-  short     String    @unique
-  clicks    Int       @default(0)
-  createdAt DateTime  @default(now())
-  expiresAt DateTime?
-  userAgent String?
-
-  userId String? // Optional (guest users won't have a userId)
-  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-  logs  LogEntry[]
-  stats UrlStats?
+model Class {
+  id           String  @id @default(uuid())
+  name         String  @unique
+  cursusLength Int     // 2, 3, or 5 years
+  students     User[]
 }
 
-/// **Logs Every Click on a Shortened URL**
-model LogEntry {
-  id        String   @id @default(uuid())
-  urlId     String
-  ipAddress String
-  userAgent String?
-  country   String?
-  referrer  String?
-  timestamp DateTime @default(now())
-
-  url Url @relation(fields: [urlId], onDelete: Cascade, references: [id])
+model Skill {
+  id          String @id @default(uuid())
+  name        String @unique
+  description String?
+  students    StudentSkill[]
 }
 
-/// **Aggregated Stats (Precomputed for Performance)**
-model UrlStats {
-  urlId          String    @id
-  totalClicks    Int       @default(0)
-  lastAccess     DateTime?
-  uniqueVisitors Int       @default(0)
+model StudentSkill {
+  id        String @id @default(uuid())
+  studentId String
+  skillId   String
+  ability   Int    // Self-evaluated (0-100)
+  peerScore Float? // Peer-evaluated score
+  student   User   @relation(fields: [studentId], references: [id])
+  skill     Skill  @relation(fields: [skillId], references: [id])
 
-  url Url @relation(fields: [urlId], references: [id], onDelete: Cascade)
+  @@unique([studentId, skillId]) // A student has one rating per skill
+}
+
+model SocialLink {
+  id        String  @id @default(uuid())
+  userId    String
+  type      String  // Enum-like (LinkedIn, GitHub, Personal Website, Dribbble, etc.)
+  url       String  // Link to the profile
+  user      User    @relation(fields: [userId], references: [id])
+}
+
+model Mentorship {
+  id        String @id @default(uuid())
+  seniorId  String
+  juniorId  String
+  senior    User   @relation(fields: [seniorId], references: [id], name: "SeniorToJunior")
+  junior    User   @relation(fields: [juniorId], references: [id], name: "JuniorToSenior")
+
+  @@unique([seniorId, juniorId]) // One junior per senior
+}
+
+model Request {
+  id         String   @id @default(uuid())
+  senderId   String
+  receiverId String
+  status     String   @default("pending") // Can be "pending", "accepted", or "rejected"
+  sender     User     @relation(fields: [senderId], references: [id], name: "RequestSender")
+  receiver   User     @relation(fields: [receiverId], references: [id], name: "RequestReceiver")
+  message    String?  // Optional message with request
+  createdAt  DateTime @default(now())
+
+  @@unique([senderId, receiverId]) // Prevent duplicate requests
+}
+
+model Message {
+  id         String  @id @default(uuid())
+  senderId   String
+  receiverId String
+  content    String
+  timestamp  DateTime @default(now())
+  sender     User     @relation(fields: [senderId], references: [id])
+  receiver   User     @relation(fields: [receiverId], references: [id])
 }
