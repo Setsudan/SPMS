@@ -72,7 +72,13 @@ docker-compose up -d
 yarn workspace backend prisma migrate dev --name init
 ```
 
-### **4️⃣ Start the Local Development Environment**
+### **4 Run Backend Migrations**
+
+```sh
+yarn workspace backend prisma generate
+```
+
+### **5 Start the Local Development Environment**
 
 ```sh
 yarn turbo dev

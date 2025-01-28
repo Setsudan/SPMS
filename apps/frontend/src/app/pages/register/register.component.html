@@ -1,40 +1,25 @@
 <div class="register-container">
   <h2>Register</h2>
-  <form (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="email">Email:</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        [(ngModel)]="email"
-        required
-      />
-    </div>
-    <div class="form-group">
-      <label for="password">Password:</label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        [(ngModel)]="password"
-        required
-      />
-    </div>
-    <div class="form-group">
-      <label for="confirmPassword">Confirm Password:</label>
-      <input
-        type="password"
-        id="confirmPassword"
-        name="confirmPassword"
-        [(ngModel)]="confirmPassword"
-        required
-      />
-    </div>
-    <div class="error">
-      <span *ngIf="error.length > 0">{{ error }}</span>
-    </div>
-    <button type="submit">Register</button>
+  <form [formGroup]="registerForm" (ngSubmit)="register()">
+    <label>First Name</label>
+    <input type="text" formControlName="firstName" required />
+
+    <label>Last Name</label>
+    <input type="text" formControlName="lastName" required />
+
+    <label>Email</label>
+    <input type="email" formControlName="email" required />
+
+    <label>Password</label>
+    <input type="password" formControlName="password" required />
+
+    <label>Grade</label>
+    <select formControlName="gradeId" required>
+      <option *ngFor="let grade of grades()" [value]="grade.id">
+        {{ grade.name }} - {{ grade.graduationYear }}
+      </option>
+    </select>
+
+    <button type="submit" [disabled]="registerForm.invalid">Register</button>
   </form>
-  <p>Already have an account? <a routerLink="/login">Login</a></p>
 </div>

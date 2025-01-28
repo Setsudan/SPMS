@@ -21,7 +21,7 @@ export class AuthService {
     }
 
     const existingGrade = await this.prisma.client.grade.findFirst({
-      where: { name: dto.gradeId },
+      where: { id: dto.gradeId },
     });
 
     if (!existingGrade) {

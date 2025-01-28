@@ -11,27 +11,36 @@ export class GradesSeeder {
     const currentYear = new Date().getFullYear();
 
     const grades = [
-        { name: 'Programme Grande École', year: 5 },
-        { name: 'Bachelor Développeur Web', year: 3 },
-        { name: 'Bachelor Data & IA', year: 3 },
-        { name: 'Bachelor Webmarketing & UX', year: 3 },
-        { name: 'Prépa Mastère Digital', year: 2 },
-        { name: 'Mastère Data & IA', year: 2 },
-        { name: 'Mastère Marketing Digital & UX', year: 2 },
-        { name: 'Mastère CTO & Tech Lead', year: 2 },
-        { name: 'Mastère Product Manager', year: 2 },
-        { name: 'Mastère Cybersécurité', year: 2 },
+      { name: 'Programme Grande École', year: 5 },
+      { name: 'Bachelor Développeur Web', year: 3 },
+      { name: 'Bachelor Data & IA', year: 3 },
+      { name: 'Bachelor Webmarketing & UX', year: 3 },
+      { name: 'Prépa Mastère Digital', year: 2 },
+      { name: 'Mastère Data & IA', year: 2 },
+      { name: 'Mastère Marketing Digital & UX', year: 2 },
+      { name: 'Mastère CTO & Tech Lead', year: 2 },
+      { name: 'Mastère Product Manager', year: 2 },
+      { name: 'Mastère Cybersécurité', year: 2 },
     ];
 
     for (const grade of grades) {
-      for (let i = 0; i < grade.year; i++) {
-        const graduationYear = `P${currentYear + i}`;
+      for (let i = 0; i <= grade.year; i++) { // ✅ Include current year
+        const graduationYear = currentYear + i;
+        const promoName = `${grade.name} - P${graduationYear}`;
+
         await this.prisma.client.grade.upsert({
-          where: { id: `${grade.name}-${graduationYear}` },
+          where: { promoName: promoName }, // ✅ Ensure unique promo name
           update: {},
-          create: { id: `${grade.name}-${graduationYear}`, name: grade.name, year: grade.year, graduationYear },
+          create: {
+            id: undefined, // ✅ Prisma auto-generates UUID
+            name: grade.name,
+            promoName,
+            year: grade.year,
+            graduationYear,
+          },
         });
-        this.logger.log(`Inserted grade: ${grade.name} - ${graduationYear}`);
+
+        this.logger.log(`Inserted grade: ${promoName}`);
       }
     }
   }

@@ -68,7 +68,7 @@ export class UserService {
         email: true,
         bio: true,
         face: true,
-        grade: { select: { name: true, graduationYear: true } },
+        grade: { select: { name: true, graduationYear: true, id: true } },
         socialLinks: true,
         skills: {
           select: {

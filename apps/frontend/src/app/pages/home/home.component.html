@@ -1,27 +1,25 @@
 <div class="home-container">
-  <h1>URL Shortener</h1>
-  <div class="url-input">
-    <input [(ngModel)]="longUrl" placeholder="Enter your long URL here" />
-    <button (click)="shortenUrl()">Shorten</button>
+  <h2 *ngIf="userGrade()">Students in {{ userGrade() }}</h2>
+  <p *ngIf="isLoading()">Loading students...</p>
+  <p *ngIf="errorMessage()" class="error">{{ errorMessage() }}</p>
+
+  <div class="students-list" *ngIf="students().length">
+    <div class="student-card" *ngFor="let student of students()">
+      <img *ngIf="student.face" [src]="student.face" alt="Profile Picture" />
+      <div class="student-info">
+        <h3>{{ student.firstName }} {{ student.lastName }}</h3>
+        <p>{{ student.bio || "No bio available." }}</p>
+        <p>
+          <strong>Skills:</strong>
+          <span *ngFor="let skill of student.skills"
+            >{{ skill.skill.name }} ({{ skill.ability }})</span
+          >
+        </p>
+      </div>
+    </div>
   </div>
-  <div *ngIf="shortUrl" class="short-url">
-    <p>
-      Your shortened URL:
-      <a [href]="shortUrl" target="_blank">{{ shortUrl }}</a>
-    </p>
-    <button (click)="copyToClipboard()">Copy</button>
-  </div>
-  <div class="recent-urls" *ngIf="recentUrls.length">
-    <h2>Recent URLs</h2>
-    <ul>
-      <li *ngFor="let url of recentUrls">
-        <a [href]="url.shortUrl" target="_blank">{{ url.shortUrl }}</a>
-        <span>{{ url.longUrl }}</span>
-      </li>
-    </ul>
-  </div>
-  <div class="auth-buttons" *ngIf="!isAuthenticated">
-    <button (click)="navigateTo('/login')">Login</button>
-    <button (click)="navigateTo('/register')">Register</button>
-  </div>
+
+  <p *ngIf="!isLoading() && !students().length && !errorMessage()">
+    No students found in your grade.
+  </p>
 </div>

@@ -1,10 +1,7 @@
-.login-container {
-  max-width: 400px;
+.edit-profile-container {
+  max-width: 600px;
   margin: auto;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 
   h2 {
     text-align: center;
@@ -12,15 +9,17 @@
 
   label {
     font-weight: bold;
-    margin-top: 5px;
+    display: block;
+    margin-top: 10px;
   }
 
+  textarea,
   input {
     width: 100%;
     padding: 8px;
     margin-top: 5px;
-    border: 1px solid #ccc;
     border-radius: 5px;
+    border: 1px solid #ccc;
   }
 
   .error {
@@ -29,22 +28,18 @@
   }
 
   button {
+    margin-top: 15px;
     width: 100%;
     padding: 10px;
-    margin-top: 15px;
-    background-color: #007bff;
+    background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
+    border-radius: 5px;
   }
 
   button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
-  }
-
-  p {
-    text-align: center;
   }
 }

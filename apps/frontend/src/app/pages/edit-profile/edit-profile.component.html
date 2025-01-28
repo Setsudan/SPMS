@@ -1,0 +1,48 @@
+<div class="edit-profile-container" *ngIf="!isLoading()">
+  <h2>Edit Profile</h2>
+
+  <form [formGroup]="profileForm" (ngSubmit)="saveChanges()">
+    <label for="bio">Bio:</label>
+    <textarea id="bio" formControlName="bio"></textarea>
+
+    <label for="face">Profile Picture URL:</label>
+    <input type="text" id="face" formControlName="face" />
+
+    <h3>Social Links</h3>
+    <div
+      *ngFor="
+        let link of profileForm.controls['socialLinks'].value;
+        let i = index
+      "
+    >
+      <input
+        type="text"
+        placeholder="Type (e.g. LinkedIn)"
+        [formControlName]="'type' + i"
+      />
+      <input type="url" placeholder="URL" [formControlName]="'url' + i" />
+    </div>
+
+    <h3>Skills</h3>
+    <div
+      *ngFor="let skill of profileForm.controls['skills'].value; let i = index"
+    >
+      <input
+        type="text"
+        placeholder="Skill ID"
+        [formControlName]="'skillId' + i"
+        readonly
+      />
+      <input
+        type="number"
+        placeholder="Ability (1-10)"
+        [formControlName]="'ability' + i"
+        min="1"
+        max="10"
+      />
+    </div>
+
+    <button type="submit" [disabled]="profileForm.invalid">Save Changes</button>
+    <p *ngIf="errorMessage()" class="error">{{ errorMessage() }}</p>
+  </form>
+</div>

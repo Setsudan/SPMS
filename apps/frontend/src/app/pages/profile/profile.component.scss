@@ -1,0 +1,43 @@
+.profile-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+
+  .profile-pic {
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  h3 {
+    margin-top: 20px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    padding: 5px;
+  }
+
+  button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+}
