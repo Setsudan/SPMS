@@ -2,9 +2,14 @@
   "name": "url-shortener",
   "version": "0.0.1",
   "private": true,
-  "workspaces": ["apps/*"],
+  "workspaces": [
+    "apps/*"
+  ],
   "devDependencies": {
     "turbo": "^2.3.4"
   },
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "yarn@1.22.22",
+  "dependencies": {
+    "url-shortener": "file:"
+  }
 }
