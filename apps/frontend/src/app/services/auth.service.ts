@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable, tap } from "rxjs";
 })
 export class AuthService {
   private readonly TOKEN_KEY = "auth_token";
-  private readonly API_URL = "http://localhost:3000";
+  private readonly API_URL = "http://localhost:5000";
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
 
   constructor(private http: HttpClient) { }

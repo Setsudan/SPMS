@@ -80,7 +80,6 @@ yarn turbo dev
 
 This runs both **backend** & **frontend** in parallel.
 
-
 ## API Endpoints
 
 ### **Shorten a URL**
@@ -99,7 +98,7 @@ This runs both **backend** & **frontend** in parallel.
 
 ```json
 {
-  "shortUrl": "http://localhost:3000/abc123"
+  "shortUrl": "http://localhost:5000/abc123"
 }
 ```
 
