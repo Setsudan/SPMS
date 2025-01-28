@@ -58,13 +58,13 @@ cd url-shortener
 yarn install
 ```
 
-### **2️⃣ Start the Local Development Environment**
+Entre cette étapes et la suivantes n'oubliez pas de setup vos variables environnementales (voir les .env.example dans `apps/backend` et `infra`)
+
+### **2️⃣ Build & Run Docker Locally**
 
 ```sh
-yarn turbo dev
+docker-compose up -d
 ```
-
-This runs both **backend** & **frontend** in parallel.
 
 ### **3️⃣ Run Backend Migrations**
 
@@ -72,11 +72,14 @@ This runs both **backend** & **frontend** in parallel.
 yarn workspace backend prisma migrate dev --name init
 ```
 
-### **4️⃣ Build & Run Docker Locally**
+### **4️⃣ Start the Local Development Environment**
 
 ```sh
-docker-compose up -d
+yarn turbo dev
 ```
+
+This runs both **backend** & **frontend** in parallel.
+
 
 ## API Endpoints
 
