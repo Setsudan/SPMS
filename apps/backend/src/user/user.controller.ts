@@ -1,12 +1,19 @@
-import { Request } from 'express';
-import { Controller, Get, UseGuards, Req } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { UserService } from './user.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RequestWithUser } from '../types/request-with-user';
 
-@UseGuards(AuthGuard('jwt'))
 @Controller('user')
 export class UserController {
+  constructor(private readonly userService: UserService) {}
+
+  @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async getProfile(@Req() req: Request) {
-    return req.user;
+  async getProfile(@Req() req: RequestWithUser) {
+    if (!req.user || !req.user.id) {
+      throw new Error('User ID is missing from request');
+    }
+
+    return this.userService.getUserProfile(req.user.id);
   }
 }
