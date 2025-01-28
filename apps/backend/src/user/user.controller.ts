@@ -1,19 +1,43 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Patch,
+  Param,
+  Body,
+  UseGuards,
+  Request,
+  ForbiddenException,
+} from '@nestjs/common';
 import { UserService } from './user.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RequestWithUser } from '../types/request-with-user';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async getProfile(@Req() req: RequestWithUser) {
-    if (!req.user || !req.user.id) {
-      throw new Error('User ID is missing from request');
+  async getProfile(@Request() req: RequestWithUser) {
+    if (!req.user?.id) {
+      throw new ForbiddenException('User ID is missing from request');
     }
-
     return this.userService.getUserProfile(req.user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('profile')
+  async updateProfile(@Request() req: RequestWithUser, @Body() dto: UpdateUserDto) {
+    if (!req.user?.id) {
+      throw new ForbiddenException('User ID is missing from request');
+    }
+    return this.userService.updateProfile(req.user.id, dto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  async getUserById(@Param('id') id: string) {
+    return this.userService.getUserProfile(id);
   }
 }
