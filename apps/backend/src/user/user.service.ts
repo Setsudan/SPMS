@@ -82,4 +82,19 @@ export class UserService {
     if (!user) throw new NotFoundException('User not found');
     return user;
   }
+
+  async addSkillToUser(userId: string, skillId: string, ability: number) {
+    // Check if the skill exists
+    const skill = await this.prisma.client.skill.findUnique({ where: { id: skillId } });
+    if (!skill) throw new NotFoundException('Skill not found');
+
+    // Upsert skill for user (update if exists, create if not)
+    return this.prisma.client.studentSkill.upsert({
+      where: {
+        studentId_skillId: { studentId: userId, skillId },
+      },
+      update: { ability },
+      create: { studentId: userId, skillId, ability },
+    });
+  }
 }

@@ -7,6 +7,8 @@ import {
   UseGuards,
   Request,
   ForbiddenException,
+  Post,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -39,5 +41,15 @@ export class UserController {
   @Get(':id')
   async getUserById(@Param('id') id: string) {
     return this.userService.getUserProfile(id);
+  }
+
+  // Skills
+  @UseGuards(JwtAuthGuard)
+  @Post('skills')
+  async addSkillToUser(@Req() req: RequestWithUser, @Body() body: { skillId: string; ability: number }) {
+    const userId = req.user?.id;
+    if (!userId) throw new Error('User ID missing from request');
+
+    return this.userService.addSkillToUser(userId, body.skillId, body.ability);
   }
 }
