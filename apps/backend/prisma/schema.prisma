@@ -30,15 +30,15 @@ model User {
 
 model Grade {
   id             String @id @default(uuid())
-  name           String @unique // e.g., "Grande École", "Bachelor Web"
-  year           Int // e.g., 1, 2, 3 (Première Année, Deuxième Année)
-  graduationYear String @unique // e.g., "P2026" for Promo 2026
+  name           String
+  year           Int
+  graduationYear String
   students       User[]
 }
 
 model Skill {
   id          String         @id @default(uuid())
-  name        String         @unique
+  name        String
   description String?
   students    StudentSkill[]
 }

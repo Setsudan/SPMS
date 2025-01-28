@@ -1,7 +1,7 @@
 export class MentorshipRequestDto {
-  receiverId: string;
+  receiverId!: string;
 }
 
 export class AcceptMentorshipDto {
-  requestId: string;
+  requestId!: string;
 }

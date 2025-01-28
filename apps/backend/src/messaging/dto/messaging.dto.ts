@@ -1,4 +1,4 @@
 export class SendMessageDto {
-  receiverId: string;
-  content: string;
+  receiverId!: string;
+  content!: string;
 }
