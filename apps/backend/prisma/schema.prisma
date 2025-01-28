@@ -15,8 +15,8 @@ model User {
   password         String // Hashed password
   face             String? // Profile picture (URL or base64)
   bio              String? // Short description about themselves
-  classId          String
-  class            Class          @relation(fields: [classId], references: [id])
+  gradeId          String?
+  grade            Grade?         @relation(fields: [gradeId], references: [id])
   skills           StudentSkill[]
   socialLinks      SocialLink[]
   juniors          Mentorship[]   @relation("SeniorToJunior")
@@ -28,11 +28,12 @@ model User {
   createdAt        DateTime       @default(now())
 }
 
-model Class {
-  id           String @id @default(uuid())
-  name         String @unique
-  cursusLength Int // 2, 3, or 5 years
-  students     User[]
+model Grade {
+  id             String @id @default(uuid())
+  name           String @unique // e.g., "Grande École", "Bachelor Web"
+  year           Int // e.g., 1, 2, 3 (Première Année, Deuxième Année)
+  graduationYear String @unique // e.g., "P2026" for Promo 2026
+  students       User[]
 }
 
 model Skill {

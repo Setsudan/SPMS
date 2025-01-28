@@ -8,13 +8,13 @@ export class MentorshipService {
 
   async requestMentorship(userId: string, dto: MentorshipRequestDto) {
     // Check if receiver exists
-    const receiver = await this.prisma.user.findUnique({
+    const receiver = await this.prisma.client.user.findUnique({
       where: { id: dto.receiverId },
     });
     if (!receiver) throw new NotFoundException('Mentor not found');
 
     // Create mentorship request
-    return await this.prisma.request.create({
+    return await this.prisma.client.request.create({
       data: {
         senderId: userId,
         receiverId: dto.receiverId,
@@ -24,14 +24,14 @@ export class MentorshipService {
   }
 
   async acceptMentorship(userId: string, dto: AcceptMentorshipDto) {
-    const request = await this.prisma.request.findUnique({
+    const request = await this.prisma.client.request.findUnique({
       where: { id: dto.requestId },
     });
     if (!request) throw new NotFoundException('Request not found');
     if (request.receiverId !== userId) throw new ForbiddenException('Unauthorized');
 
     // Create mentorship relationship
-    await this.prisma.mentorship.create({
+    await this.prisma.client.mentorship.create({
       data: {
         seniorId: userId,
         juniorId: request.senderId,
@@ -39,7 +39,7 @@ export class MentorshipService {
     });
 
     // Update request status
-    return await this.prisma.request.update({
+    return await this.prisma.client.request.update({
       where: { id: dto.requestId },
       data: { status: 'accepted' },
     });

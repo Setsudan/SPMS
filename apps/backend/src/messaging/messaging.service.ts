@@ -8,12 +8,12 @@ export class MessagingService {
 
   async sendMessage(userId: string, dto: SendMessageDto) {
     // Check if receiver exists
-    const receiver = await this.prisma.user.findUnique({
+    const receiver = await this.prisma.client.user.findUnique({
       where: { id: dto.receiverId },
     });
     if (!receiver) throw new NotFoundException('User not found');
 
-    return await this.prisma.message.create({
+    return await this.prisma.client.message.create({
       data: {
         senderId: userId,
         receiverId: dto.receiverId,
@@ -23,7 +23,7 @@ export class MessagingService {
   }
 
   async getUserMessages(userId: string) {
-    return await this.prisma.message.findMany({
+    return await this.prisma.client.message.findMany({
       where: { OR: [{ senderId: userId }, { receiverId: userId }] },
       orderBy: { timestamp: 'asc' },
     });

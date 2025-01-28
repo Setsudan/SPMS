@@ -3,7 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto, LoginDto } from './dto/auth.dto';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -12,31 +11,31 @@ export class AuthService {
     private readonly prisma: PrismaService,
   ) {}
 
-  async register(dto: RegisterDto): Promise<{ access_token: string }> {
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
+ async register(dto: RegisterDto): Promise<{ access_token: string }> {
+  const existingGrade = await this.prisma.client.grade.findUnique({
+    where: { id: dto.gradeId },
+  });
 
-    try {
-      const user = await this.prisma.user.create({
-        data: {
-          firstName: dto.firstName,
-          lastName: dto.lastName,
-          email: dto.email,
-          password: hashedPassword,
-            classId: dto.class
-        },
-      });
-
-      return this.generateToken(user);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new InternalServerErrorException(error.message);
-      }
-      throw new InternalServerErrorException('User creation failed');
-    }
+  if (!existingGrade) {
+    throw new Error('Grade not found');
   }
 
+  const user = await this.prisma.client.user.create({
+    data: {
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      email: dto.email,
+      password: await bcrypt.hash(dto.password, 10),
+      gradeId: dto.gradeId,
+    },
+  });
+
+  return this.generateToken(user);
+  }
+
+
   async login(dto: LoginDto): Promise<{ access_token: string }> {
-    const user = await this.prisma.user.findFirst({
+    const user = await this.prisma.client.user.findFirst({
       where: { email: dto.email },
     });
 
