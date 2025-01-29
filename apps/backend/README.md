@@ -193,3 +193,29 @@ http://localhost:5000/api/docs
 ✅ Should throw NotFoundException if request is not found
 ✅ Should throw ForbiddenException if user is not authorized to accept the request
 ✅ Should create mentorship and update request status if request is accepted
+
+## Messaging
+
+### Messaging service
+
+#### getUserMessages
+
+✅ Should return messages for a given user
+✅ Should return an empty array when there are no messages for a given user
+
+#### sendMessage
+
+✅ Should send a message successfully
+✅ Should throw NotFoundException if receiver does not exist
+
+### Messaging controller
+
+#### sendMessage
+
+✅ Should call sendMessage service method when user is authenticated (10 ms)
+✅ Should throw an error when user is not authenticated (6 ms)
+
+#### getUserMessages
+
+✅ Should call getUserMessages service method when user is authenticated (2 ms)
+✅ Should throw an error when user is not authenticated (2 ms)
