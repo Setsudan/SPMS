@@ -1,12 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GradesService {
-  private API_URL = 'http://localhost:5000/grades'; // Adjust API URL
+  private API_URL =`${environment.API_URL}` + 'grades';
 
   private http = inject(HttpClient);
 

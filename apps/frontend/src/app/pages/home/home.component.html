@@ -4,7 +4,11 @@
   <p *ngIf="errorMessage()" class="error">{{ errorMessage() }}</p>
 
   <div class="students-list" *ngIf="students().length">
-    <div class="student-card" *ngFor="let student of students()">
+    <div
+      class="student-card"
+      *ngFor="let student of students()"
+      (click)="viewStudent(student.id)"
+    >
       <img *ngIf="student.face" [src]="student.face" alt="Profile Picture" />
       <div class="student-info">
         <h3>{{ student.firstName }} {{ student.lastName }}</h3>

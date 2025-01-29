@@ -1,50 +1,81 @@
-.login-container {
-  max-width: 400px;
-  margin: auto;
-  padding: 20px;
+#login-page {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f4f7f9;
 
-  h2 {
+  .login-form {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     text-align: center;
-  }
-
-  label {
-    font-weight: bold;
-    margin-top: 5px;
-  }
-
-  input {
     width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+    max-width: 400px;
 
-  .error {
-    color: red;
-    text-align: center;
-  }
+    h2 {
+      font-size: 1.8rem;
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
 
-  button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease-in-out;
 
-  button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
+      &:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+      }
+    }
 
-  p {
-    text-align: center;
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #007bff;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease-in-out;
+      margin-top: 1rem;
+
+      &:hover {
+        background: #0056b3;
+      }
+    }
+
+    p {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #555;
+
+      a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+        user-select: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .error {
+      color: #d9534f;
+      font-weight: bold;
+      margin-top: 10px;
+    }
   }
 }

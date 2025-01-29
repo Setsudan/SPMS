@@ -4,12 +4,13 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuthResponse } from '../../models/types';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private API_URL = 'http://localhost:5000/auth';
+  private API_URL =`${environment.API_URL}` + 'auth';
   private http = inject(HttpClient);
   private router = inject(Router);
   private storageKey = 'access_token';

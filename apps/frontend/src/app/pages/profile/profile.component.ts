@@ -25,9 +25,11 @@ export class ProfileComponent {
     if (userId) {
       // Viewing another student's profile
       this.userService.getStudentProfile(userId).subscribe((user: User) => {
+        console.log('Viewing student profile:', user);
         this.userProfile.set(user);
         this.isOwnProfile.set(false);
       });
+
     } else {
       // Viewing own profile
       this.userService.getUserProfile().subscribe((user: User) => {
@@ -35,5 +37,9 @@ export class ProfileComponent {
         this.isOwnProfile.set(true);
       });
     }
+  }
+
+  getProfileImageUrl(name: string): string {
+    return `https://api.dicebear.com/9.x/glass/svg?seed=${name}`;
   }
 }

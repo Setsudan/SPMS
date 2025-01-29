@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserSkill } from '../../models/types';
 import { AuthService } from '../auth/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ import { AuthService } from '../auth/auth.service';
 export class UserService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = 'http://localhost:5000/users';
+  private apiUrl =`${environment.API_URL}` + 'users';
 
   private getAuthHeaders(): HttpHeaders {
     const token = this.authService.getToken();
