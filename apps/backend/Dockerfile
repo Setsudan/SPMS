@@ -1,25 +1,23 @@
-# Backend Dockerfile (apps/backend/Dockerfile)
 FROM node:18-alpine
 
+# Créer le répertoire de travail pour le monorepo complet
 WORKDIR /app
 
-# Copier les fichiers nécessaires pour installer les dépendances
-COPY package.json yarn.lock ./
+# Copier les fichiers de configuration du monorepo
+COPY ../../package.json ../../yarn.lock ./
+COPY ../../turbo.json ./
 
-# Installer les dépendances
-RUN yarn install --check-files
+# Copier le dossier apps
+COPY ../../apps ./apps/
 
-# Copier le reste des fichiers
-COPY . .
+# Installer les dépendances à la racine
+RUN yarn install
 
-# Générer Prisma Client
-RUN yarn prisma generate
+# Se positionner dans le dossier backend
+WORKDIR /app/apps/backend
 
-# Compiler le projet TypeScript
-RUN yarn build
-
-# Exposer le port de l'application
+# Exposer le port
 EXPOSE 3000
 
-# Lancer les migrations Prisma, puis démarrer l'application
-CMD ["sh", "-c", "yarn prisma migrate dev && node dist/server.js"]
+# Les commandes seront exécutées depuis la racine du monorepo
+CMD ["sh", "-c", "cd /app && yarn workspace backend prisma migrate dev --name init && yarn turbo dev"]

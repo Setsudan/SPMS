@@ -1,7 +1,5 @@
 version: '3.8'
-
 services:
-  # Base de données PostgreSQL
   postgres:
     image: postgres:15
     environment:
@@ -13,17 +11,15 @@ services:
     ports:
       - "5432:5432"
 
-  # Redis
   redis:
     image: redis:alpine
     ports:
       - "6379:6379"
 
-  # Backend (Express API)
   backend:
-    build:
-      context: ../apps/backend
-      dockerfile: Dockerfile
+    build: 
+      context: ..
+      dockerfile: apps/backend/Dockerfile
     ports:
       - "3000:3000"
     environment:
@@ -33,11 +29,10 @@ services:
       - postgres
       - redis
 
-  # Frontend (Angular)
   frontend:
     build:
-      context: ../apps/frontend
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: apps/frontend/Dockerfile
     ports:
       - "4200:80"
     depends_on:
