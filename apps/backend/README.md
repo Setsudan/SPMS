@@ -165,3 +165,31 @@ http://localhost:5000/api/docs
 ✅ Should return all grades
 ✅ Should return students by grade
 ✅ Should return empty array if no students in grade
+
+## Mentorship
+
+### Mentorship service
+
+#### requestMentorship
+
+✅ Should throw NotFoundException if receiver is not found
+✅ Should create mentorship request if receiver is found
+
+#### acceptMentorship
+
+✅ Should throw NotFoundException if request is not found
+✅ Should throw ForbiddenException if user is not authorized to accept the request
+✅ Should create mentorship and update request status if request is accepted
+
+### Mentorship controller
+
+#### requestMentorship
+
+✅ Should throw NotFoundException if receiver is not found
+✅ Should create mentorship request if receiver is found
+
+#### acceptMentorship
+
+✅ Should throw NotFoundException if request is not found
+✅ Should throw ForbiddenException if user is not authorized to accept the request
+✅ Should create mentorship and update request status if request is accepted
