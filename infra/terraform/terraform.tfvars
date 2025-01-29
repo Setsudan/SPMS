@@ -1,0 +1,5 @@
+acr_username    = "registrefrance1"
+acr_password    = "votre-acr-password"
+subscription_id = "9a86476e-b022-4aa8-9372-dab324cf625d"
+tenant_id       = "dab7d5be-3d32-41f6-b6b4-f31ecf90c7af"
+client_id       = "980714e4-6b57-457b-ae68-c0ef1ccd07e2"
