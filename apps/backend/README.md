@@ -212,10 +212,19 @@ http://localhost:5000/api/docs
 
 #### sendMessage
 
-✅ Should call sendMessage service method when user is authenticated (10 ms)
-✅ Should throw an error when user is not authenticated (6 ms)
+✅ Should call sendMessage service method when user is authenticated
+✅ Should throw an error when user is not authenticated
 
 #### getUserMessages
 
-✅ Should call getUserMessages service method when user is authenticated (2 ms)
-✅ Should throw an error when user is not authenticated (2 ms)
+✅ Should call getUserMessages service method when user is authenticated
+✅ Should throw an error when user is not authenticated
+
+## Prisma
+
+### Prisma service
+
+✅ Should be defined
+✅ Should connect to the database on module init
+✅ Should disconnect from the database on module destroy
+✅ Should return the PrismaClient instance
