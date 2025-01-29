@@ -14,7 +14,7 @@ export class GradesService {
   async getStudentsByGrade(gradeId: string) {
     return this.prisma.client.user.findMany({
       where: { gradeId },
-      select: { id: true, firstName: true, lastName: true, email: true },
+      select: { id: true, firstName: true, lastName: true, email: true, face: true, bio: true },
     });
   }
 }

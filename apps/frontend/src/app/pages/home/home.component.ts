@@ -1,15 +1,15 @@
 import { Component, inject, signal } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
-import { AuthService } from '../../services/auth/auth.service';
 import { NgFor, NgIf } from '@angular/common';
 import { Router } from '@angular/router';
+import { SlicePipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [NgIf, NgFor]
+  imports: [NgIf, NgFor, SlicePipe]
 })
 export class HomeComponent {
   private userService = inject(UserService);
@@ -37,6 +37,7 @@ export class HomeComponent {
     this.userService.getStudentsByGrade(gradeId).subscribe({
       next: (students) => {
         this.students.set(students);
+        console.log('Students:', students);
         this.isLoading.set(false);
       },
       error: (err) => {
