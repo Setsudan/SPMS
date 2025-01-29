@@ -30,6 +30,8 @@ describe("GradesService", () => {
                           firstName: "John",
                           lastName: "Doe",
                           email: "john@example.com",
+                          bio: "Student bio", // Ajout du champ bio
+                          face: "face-image-url", // Ajout du champ face
                         },
                       ]
                     : []
@@ -61,11 +63,21 @@ describe("GradesService", () => {
         firstName: "John",
         lastName: "Doe",
         email: "john@example.com",
+        bio: "Student bio", // Ajout du champ bio dans les attentes
+        face: "face-image-url", // Ajout du champ face dans les attentes
       },
     ]);
+
     expect(prismaService.client.user.findMany).toHaveBeenCalledWith({
       where: { gradeId: "1" },
-      select: { id: true, firstName: true, lastName: true, email: true },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        bio: true, // Inclure bio dans la sélection attendue
+        face: true, // Inclure face dans la sélection attendue
+      },
     });
   });
 
@@ -74,7 +86,14 @@ describe("GradesService", () => {
     expect(result).toEqual([]);
     expect(prismaService.client.user.findMany).toHaveBeenCalledWith({
       where: { gradeId: "9999999" },
-      select: { id: true, firstName: true, lastName: true, email: true },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        bio: true, // Inclure bio dans la sélection attendue
+        face: true, // Inclure face dans la sélection attendue
+      },
     });
   });
 });
