@@ -1,14 +1,17 @@
-<div class="login-form">
-  <h2>Login</h2>
+<section id="login-page">
+  <div class="login-form">
+    <h2>Login</h2>
 
-  <input type="email" [(ngModel)]="email" placeholder="Email" required />
-  <input
-    type="password"
-    [(ngModel)]="password"
-    placeholder="Password"
-    required
-  />
-  <button (click)="login()">Login</button>
+    <input type="email" [(ngModel)]="email" placeholder="Email" required />
+    <input
+      type="password"
+      [(ngModel)]="password"
+      placeholder="Password"
+      required
+    />
+    <button (click)="login()">Login</button>
 
-  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
-</div>
+    <p>Don't have an account? <a href="/register">Register</a></p>
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  </div>
+</section>

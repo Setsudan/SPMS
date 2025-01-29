@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { NgFor, NgIf } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +13,7 @@ import { NgFor, NgIf } from '@angular/common';
 })
 export class HomeComponent {
   private userService = inject(UserService);
-  private authService = inject(AuthService);
+  private router = inject(Router);
 
   students = signal<any[]>([]);
   isLoading = signal<boolean>(true);
@@ -43,5 +44,11 @@ export class HomeComponent {
         this.errorMessage.set(err.error.message || 'Failed to fetch students.');
       }
     });
+  }
+
+  viewStudent(studentId: string) {
+    console.log('View student:', studentId);
+    // go to /profile?id=studentId
+    this.router.navigate(['/profile', studentId]);
   }
 }

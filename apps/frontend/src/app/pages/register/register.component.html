@@ -1,25 +1,29 @@
-<div class="register-container">
-  <h2>Register</h2>
-  <form [formGroup]="registerForm" (ngSubmit)="register()">
-    <label>First Name</label>
-    <input type="text" formControlName="firstName" required />
+<section id="register-page">
+  <div class="register-container">
+    <h2>Register</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+      <label>First Name</label>
+      <input type="text" formControlName="firstName" required />
 
-    <label>Last Name</label>
-    <input type="text" formControlName="lastName" required />
+      <label>Last Name</label>
+      <input type="text" formControlName="lastName" required />
 
-    <label>Email</label>
-    <input type="email" formControlName="email" required />
+      <label>Email</label>
+      <input type="email" formControlName="email" required />
 
-    <label>Password</label>
-    <input type="password" formControlName="password" required />
+      <label>Password</label>
+      <input type="password" formControlName="password" required />
 
-    <label>Grade</label>
-    <select formControlName="gradeId" required>
-      <option *ngFor="let grade of grades()" [value]="grade.id">
-        {{ grade.name }} - {{ grade.graduationYear }}
-      </option>
-    </select>
+      <label>Grade</label>
+      <select formControlName="gradeId" required>
+        <option *ngFor="let grade of grades()" [value]="grade.id">
+          {{ grade.name }} - {{ grade.graduationYear }}
+        </option>
+      </select>
 
-    <button type="submit" [disabled]="registerForm.invalid">Register</button>
-  </form>
-</div>
+      <button type="submit" [disabled]="registerForm.invalid">Register</button>
+
+      <p>Already have an account? <a href="/login">Login</a></p>
+    </form>
+  </div>
+</section>

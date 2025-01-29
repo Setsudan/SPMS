@@ -1,42 +1,53 @@
-<div class="profile-container" *ngIf="userProfile()">
-  <h2>
-    {{
-      isOwnProfile()
-        ? "My Profile"
-        : userProfile().firstName + " " + userProfile().lastName
-    }}
-  </h2>
+<section id="profile_page">
+  <div class="profile-container" *ngIf="userProfile()">
+    <h2>
+      {{
+        isOwnProfile()
+          ? "My Profile"
+          : userProfile().firstName + " " + userProfile().lastName
+      }}
+    </h2>
 
-  <div class="profile-pic">
-    <img
-      [src]="userProfile().face || 'assets/default-profile.png'"
-      alt="Profile Picture"
-    />
+    <div class="profile-pic">
+      <img
+        [src]="
+          userProfile().face
+            ? userProfile().face
+            : getProfileImageUrl(userProfile().firstName)
+        "
+        alt="Profile Picture"
+      />
+    </div>
+
+    <p><strong>Email:</strong> {{ userProfile().email }}</p>
+    <p><strong>Bio:</strong> {{ userProfile().bio || "No bio available" }}</p>
+    <p>
+      <strong>Grade:</strong> {{ userProfile().grade?.name }} ({{
+        userProfile().grade?.graduationYear
+      }})
+    </p>
+
+    <h3>Social Links</h3>
+    <ul>
+      <li *ngFor="let link of userProfile().socialLinks">
+        <a [href]="link.url" target="_blank">{{ link.type }}</a>
+      </li>
+    </ul>
+
+    <h3>Skills</h3>
+    <ul>
+      <li *ngFor="let skill of userProfile().skills">
+        <p>
+          {{ skill.skill.name }}
+        </p>
+        <div class="level">
+          <span *ngFor="let i of [].constructor(skill.ability)">💻</span>
+        </div>
+      </li>
+    </ul>
+
+    <button *ngIf="isOwnProfile()" routerLink="/edit-profile">
+      Edit Profile
+    </button>
   </div>
-
-  <p><strong>Email:</strong> {{ userProfile().email }}</p>
-  <p><strong>Bio:</strong> {{ userProfile().bio || "No bio available" }}</p>
-  <p>
-    <strong>Grade:</strong> {{ userProfile().grade?.name }} ({{
-      userProfile().grade?.graduationYear
-    }})
-  </p>
-
-  <h3>Social Links</h3>
-  <ul>
-    <li *ngFor="let link of userProfile().socialLinks">
-      <a [href]="link.url" target="_blank">{{ link.type }}</a>
-    </li>
-  </ul>
-
-  <h3>Skills</h3>
-  <ul>
-    <li *ngFor="let skill of userProfile().skills">
-      {{ skill.skill.name }} - Level: {{ skill.ability }}
-    </li>
-  </ul>
-
-  <button *ngIf="isOwnProfile()" routerLink="/edit-profile">
-    Edit Profile
-  </button>
-</div>
+</section>
