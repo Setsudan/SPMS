@@ -3,3 +3,4 @@ node_modules
 .vscode
 .angular
 infra/.env
+*.exe
