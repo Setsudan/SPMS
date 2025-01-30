@@ -285,32 +285,3 @@
     }
   }
 }
-
-// Dark Mode Support
-@media (prefers-color-scheme: dark) {
-  .edit-profile-container {
-    background-color: var(--bg-dark, #222);
-    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
-
-    h2 {
-      color: var(--text-dark, #f5f5f5);
-    }
-  }
-
-  .form-group label,
-  .skills-section label {
-    color: var(--text-dark, #f5f5f5);
-  }
-
-  .selected-skills .skill-entry {
-    background-color: var(--bg-dark-light, #333);
-  }
-
-  .submit-button {
-    background-color: var(--accent-dark, #00bcd4);
-
-    &:hover {
-      background-color: var(--accent-hover-dark, #008ba3);
-    }
-  }
-}
