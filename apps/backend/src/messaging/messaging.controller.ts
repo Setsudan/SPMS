@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, UseGuards, Req } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Param, Body, UseGuards, Req, UnauthorizedException, Logger } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { MessagingService } from './messaging.service';
 import { SendMessageDto } from './dto/messaging.dto';
@@ -11,17 +11,23 @@ export class MessagingController {
 
   @Post('send')
   async sendMessage(@Req() req: RequestWithUser, @Body() dto: SendMessageDto) {
-    if (req.user) {
-      return this.messagingService.sendMessage(req.user.id, dto);
+
+    if (!req.user || !req.user.id) {
+      throw new UnauthorizedException('User ID is missing from request');
     }
-    throw new Error('User not authenticated');
+
+    return this.messagingService.sendMessage(req.user.id, dto);
   }
 
   @Get()
   async getUserMessages(@Req() req: RequestWithUser) {
-    if (req.user) {
-      return this.messagingService.getUserMessages(req.user.id);
-    }
-    throw new Error('User not authenticated');
+    if (!req.user) throw new UnauthorizedException('User not authenticated');
+    return this.messagingService.getUserMessages(req.user.id);
+  }
+
+  @Patch(':id/read')
+  async markMessageAsRead(@Req() req: RequestWithUser, @Param('id') messageId: string) {
+    if (!req.user) throw new UnauthorizedException('User not authenticated');
+    return this.messagingService.markMessageAsRead(req.user.id, messageId);
   }
 }

@@ -36,7 +36,7 @@ export class AuthService {
     return sessionStorage.getItem(this.storageKey);
   }
 
-  private getAuthHeaders(): HttpHeaders {
+  getAuthHeaders(): HttpHeaders {
     const token = this.getToken();
     return new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -51,7 +51,7 @@ export class AuthService {
         if (response.access_token) {
           sessionStorage.setItem('access_token', response.access_token);
           this.authStatus.next(true);
-          this.router.navigate(['/home']); // ✅ Redirect on successful login
+          this.router.navigate(['/home']);
         }
       })
     );
