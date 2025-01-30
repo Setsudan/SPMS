@@ -1,0 +1,204 @@
+.edit-profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    text-align: center;
+    color: #333;
+  }
+
+  .profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .profile-picture-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .profile-picture-preview {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid #ddd;
+      margin-bottom: 10px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      text-align: center;
+    }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      resize: none;
+    }
+  }
+
+  .social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .social-link-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      input {
+        flex-grow: 1;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+      }
+
+      .remove-btn {
+        background: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+    }
+
+    .add-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  }
+
+  .skills-section {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .skill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+      list-style: none;
+      padding: 0;
+
+      .skill-item {
+        .skill-button {
+          padding: 8px 12px;
+          border: none;
+          border-radius: 8px;
+          background: #28a745;
+          color: white;
+          cursor: pointer;
+
+          &:hover {
+            background: #218838;
+          }
+        }
+      }
+    }
+  }
+
+  .selected-skills {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .skill-entry {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      background: #f8f9fa;
+      border-radius: 8px;
+
+      .skill-name {
+        flex-grow: 1;
+        font-weight: bold;
+      }
+
+      .skill-level {
+        width: 50px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .remove-btn {
+        background: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .submit-button {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+  }
+
+  .error {
+    color: red;
+    text-align: center;
+  }
+}

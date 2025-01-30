@@ -1,46 +1,50 @@
-import { Component } from "@angular/core"
-import { CommonModule } from "@angular/common"
-import { FormsModule } from "@angular/forms"
-import { Router } from "@angular/router"
-import { AuthService } from "../../services/auth.service"
-import { switchMap } from "rxjs"
-
+import { Component, signal, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth/auth.service';
+import { GradesService } from '../../services/grades/grades.service';
+import { Router } from '@angular/router';
+import { NgFor } from '@angular/common';
 @Component({
-  selector: "app-register",
+  selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: "./register.component.html",
-  styleUrls: ["./register.component.scss"],
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss'],
+  imports: [NgFor, ReactiveFormsModule]
 })
 export class RegisterComponent {
-  email = ""
-  password = ""
-  confirmPassword = ""
-  error = ""
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private gradesService = inject(GradesService);
+  private router = inject(Router);
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) { }
+  registerForm: FormGroup;
+  grades = signal<{ id: string; name: string; graduationYear: string }[]>([]);
 
-  onSubmit() {
-    if (this.password !== this.confirmPassword) {
-      console.error("Passwords do not match")
-      this.error = "Passwords do not match"
-      return
-    }
+  constructor() {
+    this.registerForm = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      gradeId: ['', Validators.required],
+    });
 
-    this.authService.register(this.email, this.password).pipe(
-      switchMap(() => this.authService.login(this.email, this.password))
-    ).subscribe({
-      next: () => {
-        this.router.navigate(["/shorter"]);
-      },
-      error: (error) => {
-        console.error("Error during registration or login:", error);
-        this.error = "An error occurred during registration or login";
-      }
+    this.fetchGrades();
+  }
+
+  fetchGrades() {
+    this.gradesService.getGrades().subscribe({
+      next: (data) => this.grades.set(data),
+      error: (err) => console.error('Error fetching grades:', err),
     });
   }
-}
 
+  register() {
+    if (this.registerForm.valid) {
+      this.authService.register(this.registerForm.value).subscribe({
+        next: () => this.router.navigate(['/dashboard']),
+        error: (err) => console.error('Registration failed:', err),
+      });
+    }
+  }
+}

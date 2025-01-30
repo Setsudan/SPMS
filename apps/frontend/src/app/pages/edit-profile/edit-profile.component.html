@@ -1,0 +1,129 @@
+<div class="edit-profile-container">
+  <h2>Edit Profile</h2>
+
+  <form
+    [formGroup]="profileForm"
+    (ngSubmit)="saveChanges()"
+    class="profile-form"
+  >
+    <!-- Profile Picture -->
+    <div class="profile-picture-section">
+      <label for="face">Profile Picture</label>
+      <div class="profile-picture-preview">
+        <img
+          [src]="profileForm.get('face')?.value || 'assets/default-avatar.png'"
+          alt="Profile Picture"
+        />
+      </div>
+      <input
+        id="face"
+        type="text"
+        formControlName="face"
+        placeholder="Enter image URL"
+      />
+    </div>
+
+    <!-- Bio -->
+    <div class="form-group">
+      <label for="bio">Bio</label>
+      <textarea
+        id="bio"
+        formControlName="bio"
+        placeholder="Tell us about yourself (max 500 chars)"
+      ></textarea>
+    </div>
+
+    <!-- Social Links -->
+    <div class="form-group">
+      <label>Social Links</label>
+      <div class="social-links">
+        <div
+          *ngFor="let linkControl of getSocialLinksControls(); let i = index"
+          [formGroup]="linkControl"
+          class="social-link-item"
+        >
+          <!-- Link Type Select -->
+          <select formControlName="type">
+            <option *ngFor="let type of linkTypeOptions" [value]="type">
+              {{ type }}
+            </option>
+          </select>
+
+          <!-- URL Input -->
+          <input
+            type="text"
+            formControlName="url"
+            placeholder="Enter social media link"
+          />
+
+          <button
+            type="button"
+            (click)="removeSocialLink(i)"
+            class="remove-btn"
+          >
+            ×
+          </button>
+        </div>
+
+        <button type="button" (click)="addSocialLink()" class="add-btn">
+          + Add Link
+        </button>
+      </div>
+    </div>
+
+    <!-- Skills Selection -->
+    <div class="skills-section">
+      <label for="skill-search">Search Skills</label>
+      <input
+        id="skill-search"
+        type="text"
+        placeholder="Search skills..."
+        (input)="onSkillInput($event)"
+        class="search-input"
+      />
+
+      <ul class="skill-list">
+        <li *ngFor="let skill of filteredSkills()" class="skill-item">
+          <button type="button" (click)="addSkill(skill)" class="skill-button">
+            {{ skill.name }}
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Selected Skills -->
+    <div class="selected-skills">
+      <h3>Selected Skills</h3>
+      <div
+        *ngFor="let skillControl of getSkillsControls(); let i = index"
+        [formGroup]="skillControl"
+        class="skill-entry"
+      >
+        <span class="skill-name">{{ skillControl.get("name")?.value }}</span>
+        <input
+          type="number"
+          min="0"
+          max="5"
+          formControlName="ability"
+          class="skill-level"
+          placeholder="Skill level (0-5)"
+        />
+        <button type="button" (click)="removeSkill(i)" class="remove-btn">
+          ×
+        </button>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      [disabled]="profileForm.invalid || isLoading()"
+      class="submit-button"
+    >
+      Save Changes
+    </button>
+
+    <!-- Error Message -->
+    <p *ngIf="errorMessage()" class="error">{{ errorMessage() }}</p>
+  </form>
+</div>

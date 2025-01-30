@@ -1,44 +1,82 @@
 .home-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+  text-align: center;
 
-.url-input {
-  display: flex;
-  gap: 10px;
-}
+  h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
 
-input,
-button {
-  padding: 10px;
-  font-size: 16px;
-}
+  p {
+    font-size: 1rem;
+    color: #555;
+  }
 
-button {
-  background-color: #000;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
+  .error {
+    color: #d9534f;
+    font-weight: bold;
+    margin-top: 10px;
+  }
 
-.short-url {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+  .students-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
 
-.recent-urls ul {
-  list-style-type: none;
-  padding: 0;
-}
+    .student-card {
+      background: #ffffff;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 
-.recent-urls li {
-  margin-bottom: 10px;
-}
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
 
-.auth-buttons {
-  display: flex;
-  gap: 10px;
+      img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #007bff;
+      }
+
+      .student-info {
+        text-align: left;
+        flex: 1;
+
+        h3 {
+          font-size: 1.2rem;
+          color: #333;
+          margin-bottom: 5px;
+        }
+
+        p {
+          font-size: 0.9rem;
+          color: #666;
+          margin-bottom: 5px;
+        }
+
+        span {
+          display: inline-block;
+          background: #007bff;
+          color: white;
+          padding: 4px 8px;
+          border-radius: 6px;
+          font-size: 0.8rem;
+          margin: 3px;
+          font-weight: bold;
+        }
+      }
+    }
+  }
 }

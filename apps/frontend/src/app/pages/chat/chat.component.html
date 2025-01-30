@@ -1,0 +1,21 @@
+<div class="chat-container">
+  <h2>Chat with {{ receiverId }}</h2>
+
+  <!-- Message List -->
+  <div class="message-list">
+    <ul>
+      <li
+        *ngFor="let msg of messages"
+        [class.unread]="!msg.read"
+        (click)="markAsRead(msg)"
+      >
+        <strong *ngIf="msg.senderId !== userId">Friend:</strong>
+        <strong *ngIf="msg.senderId === userId">You:</strong>
+        {{ msg.content }}
+      </li>
+    </ul>
+  </div>
+
+  <!-- Chat Input -->
+  <app-chat [receiverId]="receiverId"></app-chat>
+</div>
