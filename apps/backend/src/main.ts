@@ -8,7 +8,9 @@ import { SkillsSeeder } from "./prisma/seeders/skills/skills.service";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  app.enableCors({
+    origin: "*",
+  });
 
   // Ajout de Prometheus
   const collectDefaultMetrics = promClient.collectDefaultMetrics;
