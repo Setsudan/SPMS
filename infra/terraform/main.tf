@@ -104,3 +104,75 @@ resource "azurerm_container_group" "redis" {
     environment = "testing"
   }
 }
+# Déploiement Backend
+resource "azurerm_container_group" "backend" {
+  for_each            = azurerm_resource_group.rg
+  name                = "backend-container-${each.key}"
+  location            = each.value.location
+  resource_group_name = each.value.name
+  os_type             = "Linux"
+
+  container {
+    name   = "backend"
+    image  = "${each.key == "france" ? azurerm_container_registry.acr_france.login_server : azurerm_container_registry.acr_germany.login_server}/backend:latest"
+    cpu    = "1"
+    memory = "1.5"
+
+    ports {
+      port     = 3000
+      protocol = "TCP"
+    }
+
+    environment_variables = {
+      DATABASE_HOST = "postgres-container-${each.key}"
+      REDIS_HOST    = "redis-container-${each.key}"
+      DATABASE_PORT = "5432"
+      REDIS_PORT    = "6379"
+    }
+  }
+
+  image_registry_credential {
+    server   = each.key == "france" ? azurerm_container_registry.acr_france.login_server : azurerm_container_registry.acr_germany.login_server
+    username = each.key == "france" ? azurerm_container_registry.acr_france.admin_username : azurerm_container_registry.acr_germany.admin_username
+    password = each.key == "france" ? azurerm_container_registry.acr_france.admin_password : azurerm_container_registry.acr_germany.admin_password
+  }
+
+  tags = {
+    environment = "production"
+  }
+}
+# Déploiement Frontend
+resource "azurerm_container_group" "frontend" {
+  for_each            = azurerm_resource_group.rg
+  name                = "frontend-container-${each.key}"
+  location            = each.value.location
+  resource_group_name = each.value.name
+  os_type             = "Linux"
+
+  container {
+    name   = "frontend"
+    image  = "${each.key == "france" ? azurerm_container_registry.acr_france.login_server : azurerm_container_registry.acr_germany.login_server}/frontend:latest"
+    cpu    = "0.5"
+    memory = "1.0"
+
+    ports {
+      port     = 80
+      protocol = "TCP"
+    }
+
+    environment_variables = {
+      BACKEND_URL = "http://backend-container-${each.key}:3000"
+    }
+  }
+
+  image_registry_credential {
+    server   = each.key == "france" ? azurerm_container_registry.acr_france.login_server : azurerm_container_registry.acr_germany.login_server
+    username = each.key == "france" ? azurerm_container_registry.acr_france.admin_username : azurerm_container_registry.acr_germany.admin_username
+    password = each.key == "france" ? azurerm_container_registry.acr_france.admin_password : azurerm_container_registry.acr_germany.admin_password
+  }
+
+  tags = {
+    environment = "production"
+  }
+}
+

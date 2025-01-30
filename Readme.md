@@ -35,6 +35,7 @@ url-shortener/
 │   ├── backend/         # Express API (TypeScript)
 │   ├── frontend/        # Angular UI
 │── infra/               # Kubernetes, Docker, CI/CD
+|   ├── terraform        # Terraform with Azure
 │── .github/workflows/   # GitHub Actions
 │── turbo.json           # Turbo configuration
 │── package.json         # Root dependencies
