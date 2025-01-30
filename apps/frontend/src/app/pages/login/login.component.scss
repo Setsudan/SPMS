@@ -3,79 +3,141 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: #f4f7f9;
+  background-color: var(--bg-color, #f5f5f5);
+  transition: background-color 0.3s ease;
 
   .login-form {
-    background: #ffffff;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: center;
     width: 100%;
     max-width: 400px;
+    padding: 2rem;
+    background-color: var(--form-bg, #fff);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
     h2 {
       font-size: 1.8rem;
-      color: #333;
+      color: var(--text-color, #333);
       margin-bottom: 1.5rem;
     }
 
     input {
       width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 2px solid #ddd;
-      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
       font-size: 1rem;
-      transition: border-color 0.3s ease-in-out;
+      border: 2px solid var(--border-color, #ccc);
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s ease;
 
       &:focus {
-        outline: none;
-        border-color: #007bff;
-        box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+        border-color: var(--accent-color, #007bff);
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
       }
     }
 
     button {
       width: 100%;
-      padding: 12px;
-      background: #007bff;
-      color: #ffffff;
+      padding: 0.75rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #fff;
+      background-color: var(--accent-color, #007bff);
       border: none;
       border-radius: 8px;
-      font-size: 1.1rem;
-      font-weight: bold;
       cursor: pointer;
-      transition: background 0.3s ease-in-out;
-      margin-top: 1rem;
+      transition: background-color 0.3s ease, transform 0.2s ease;
 
       &:hover {
-        background: #0056b3;
+        background-color: var(--accent-hover, #0056b3);
+        transform: scale(1.02);
+      }
+
+      &:active {
+        transform: scale(1);
       }
     }
 
     p {
+      font-size: 1rem;
+      color: var(--text-muted, #555);
       margin-top: 1rem;
-      font-size: 0.9rem;
-      color: #555;
 
       a {
-        color: #007bff;
+        color: var(--accent-color, #007bff);
         text-decoration: none;
-        font-weight: 600;
-        cursor: pointer;
-        user-select: none;
+        font-weight: bold;
+        transition: color 0.3s ease;
 
         &:hover {
-          text-decoration: underline;
+          color: var(--accent-hover, #0056b3);
         }
       }
     }
 
     .error {
-      color: #d9534f;
+      color: red;
       font-weight: bold;
-      margin-top: 10px;
+      margin-top: 1rem;
+    }
+  }
+}
+
+// Responsive Styles
+@media (max-width: 768px) {
+  #login-page {
+    padding: 1rem;
+  }
+
+  .login-form {
+    padding: 1.5rem;
+  }
+}
+
+// Dark Mode Support
+@media (prefers-color-scheme: dark) {
+  #login-page {
+    background-color: var(--bg-dark, #222);
+  }
+
+  .login-form {
+    background-color: var(--form-dark, #333);
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+
+    h2 {
+      color: var(--text-dark, #f5f5f5);
+    }
+
+    input {
+      background-color: var(--input-dark, #444);
+      color: var(--text-dark, #f5f5f5);
+      border-color: var(--border-dark, #555);
+
+      &:focus {
+        border-color: var(--accent-dark, #00bcd4);
+      }
+    }
+
+    button {
+      background-color: var(--accent-dark, #00bcd4);
+
+      &:hover {
+        background-color: var(--accent-hover-dark, #008ba3);
+      }
+    }
+
+    p {
+      color: var(--text-muted-dark, #bbb);
+
+      a {
+        color: var(--accent-dark, #00bcd4);
+
+        &:hover {
+          color: var(--accent-hover-dark, #008ba3);
+        }
+      }
     }
   }
 }
