@@ -1,48 +1,65 @@
-<div class="edit-profile-container" *ngIf="!isLoading()">
+<div class="edit-profile-container">
   <h2>Edit Profile</h2>
 
   <form [formGroup]="profileForm" (ngSubmit)="saveChanges()">
-    <label for="bio">Bio:</label>
-    <textarea id="bio" formControlName="bio"></textarea>
+    <label for="bio">Bio</label>
+    <textarea id="bio" formControlName="bio" maxlength="500"></textarea>
 
-    <label for="face">Profile Picture URL:</label>
-    <input type="text" id="face" formControlName="face" />
+    <label for="face">Profile Picture URL</label>
+    <input id="face" type="text" formControlName="face" />
 
-    <h3>Social Links</h3>
-    <div
-      *ngFor="
-        let link of profileForm.controls['socialLinks'].value;
-        let i = index
-      "
-    >
+    <label>Social Links</label>
+    <div *ngFor="let linkControl of getSocialLinksControls(); let i = index">
       <input
         type="text"
-        placeholder="Type (e.g. LinkedIn)"
-        [formControlName]="'type' + i"
+        [formControlName]="i"
+        placeholder="Enter social link"
       />
-      <input type="url" placeholder="URL" [formControlName]="'url' + i" />
     </div>
 
     <h3>Skills</h3>
-    <div
-      *ngFor="let skill of profileForm.controls['skills'].value; let i = index"
-    >
-      <input
-        type="text"
-        placeholder="Skill ID"
-        [formControlName]="'skillId' + i"
-        readonly
-      />
-      <input
-        type="number"
-        placeholder="Ability (1-10)"
-        [formControlName]="'ability' + i"
-        min="1"
-        max="10"
-      />
+    <input
+      type="text"
+      placeholder="Search skills..."
+      (input)="onSkillInput($event)"
+      class="search-input"
+    />
+    <ul class="skill-list">
+      <li *ngFor="let skill of filteredSkills()" class="skill-item">
+        <button type="button" (click)="addSkill(skill)" class="skill-button">
+          {{ skill.name }}
+        </button>
+      </li>
+    </ul>
+
+    <div class="selected-skills">
+      <h4>Selected Skills</h4>
+      <div
+        *ngFor="let skillControl of getSkillsControls(); let i = index"
+        class="skill-entry"
+      >
+        <span class="skill-name">{{ skillControl.value.name }}</span>
+        <input
+          type="number"
+          min="0"
+          max="5"
+          [formControlName]="i"
+          class="skill-level"
+          placeholder="Skill level (0-5)"
+        />
+        <button type="button" (click)="removeSkill(i)" class="remove-skill">
+          Remove
+        </button>
+      </div>
     </div>
 
-    <button type="submit" [disabled]="profileForm.invalid">Save Changes</button>
+    <button
+      type="submit"
+      [disabled]="profileForm.invalid || isLoading()"
+      class="submit-button"
+    >
+      Save Changes
+    </button>
     <p *ngIf="errorMessage()" class="error">{{ errorMessage() }}</p>
   </form>
 </div>

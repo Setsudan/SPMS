@@ -2,44 +2,124 @@
   max-width: 600px;
   margin: auto;
   padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-  h2 {
-    text-align: center;
-  }
+h2 {
+  text-align: center;
+  color: #333;
+}
 
-  label {
-    font-weight: bold;
-    display: block;
-    margin-top: 10px;
-  }
+form {
+  display: flex;
+  flex-direction: column;
+}
 
-  textarea,
-  input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
+label {
+  margin-top: 10px;
+  font-weight: bold;
+}
 
-  .error {
-    color: red;
-    text-align: center;
-  }
+input,
+textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 
-  button {
-    margin-top: 15px;
-    width: 100%;
-    padding: 10px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-  }
+.search-input {
+  margin-bottom: 10px;
+}
 
-  button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
+.skill-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.skill-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.skill-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.skill-button:hover {
+  background: #0056b3;
+}
+
+.selected-skills {
+  margin-top: 20px;
+}
+
+.skill-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8f9fa;
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+.skill-name {
+  flex: 1;
+  font-weight: bold;
+}
+
+.skill-level {
+  width: 50px;
+  text-align: center;
+  margin: 0 10px;
+}
+
+.remove-skill {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.remove-skill:hover {
+  background: #b02a37;
+}
+
+.submit-button {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 20px;
+}
+
+.submit-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+  text-align: center;
 }

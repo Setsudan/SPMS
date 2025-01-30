@@ -30,8 +30,8 @@ export class UserService {
     return this.http.get<any>(`${this.apiUrl}/${userId}`, { headers: this.getAuthHeaders() });
   }
 
-  updateUserProfile(userId: string, data: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${userId}`, data, { headers: this.getAuthHeaders() });
+  updateUserProfile(data: any): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/profile`, data, { headers: this.getAuthHeaders() });
   }
 
   getStudentsByGrade(gradeId: string): Observable<any[]> {

@@ -12,12 +12,12 @@
       <img *ngIf="student.face" [src]="student.face" alt="Profile Picture" />
       <div class="student-info">
         <h3>{{ student.firstName }} {{ student.lastName }}</h3>
-        <p>{{ student.bio || "No bio available." }}</p>
         <p>
-          <strong>Skills:</strong>
-          <span *ngFor="let skill of student.skills"
-            >{{ skill.skill.name }} ({{ skill.ability }})</span
-          >
+          {{
+            (student.bio?.length > 145
+              ? (student.bio | slice : 0 : 145) + "..."
+              : student.bio) || "No bio available."
+          }}
         </p>
       </div>
     </div>
