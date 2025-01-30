@@ -1,0 +1,71 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+env:
+  REGISTRY: acrname.azurecr.io
+  FRONTEND_IMAGE: acrname.azurecr.io/frontend
+  BACKEND_IMAGE: acrname.azurecr.io/backend
+  AZURE_RG: myResourceGroup
+  AZURE_CLUSTER_NAME_FR: aks-france
+  AZURE_CLUSTER_NAME_DE: aks-germany
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Log in to ACR
+        run: |
+          az acr login --name acrname
+
+      - name: Build & Push Backend Image
+        run: |
+          docker build -t $BACKEND_IMAGE:${{ github.sha }} -f apps/backend/Dockerfile apps/backend
+          docker push $BACKEND_IMAGE:${{ github.sha }}
+
+      - name: Build & Push Frontend Image
+        run: |
+          docker build -t $FRONTEND_IMAGE:${{ github.sha }} -f apps/frontend/Dockerfile apps/frontend
+          docker push $FRONTEND_IMAGE:${{ github.sha }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS context (France)
+        run: az aks get-credentials --resource-group $AZURE_RG --name $AZURE_CLUSTER_NAME_FR
+
+      - name: Deploy to AKS France
+        run: |
+          kubectl apply -f infra/k8s/
+          kubectl set image deployment/backend backend=$BACKEND_IMAGE:${{ github.sha }}
+          kubectl set image deployment/frontend frontend=$FRONTEND_IMAGE:${{ github.sha }}
+
+      - name: Set AKS context (Germany)
+        run: az aks get-credentials --resource-group $AZURE_RG --name $AZURE_CLUSTER_NAME_DE
+
+      - name: Deploy to AKS Germany
+        run: |
+          kubectl apply -f infra/k8s/
+          kubectl set image deployment/backend backend=$BACKEND_IMAGE:${{ github.sha }}
+          kubectl set image deployment/frontend frontend=$FRONTEND_IMAGE:${{ github.sha }}
