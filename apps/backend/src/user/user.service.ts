@@ -94,4 +94,15 @@ export class UserService {
       create: { studentId: userId, skillId, ability },
     });
   }
+
+  async getGrade(userId: string) { // Get user's grade
+    const user = await this.prisma.client.user.findUnique({
+      where: { id: userId },
+      include: { grade: true },
+    });
+
+    if (!user) throw new NotFoundException('User not found');
+    if (!user.grade) throw new NotFoundException('Grade not found');
+    return user.grade;
+  }
 }

@@ -18,7 +18,11 @@ export class UserService {
   }
 
   getStudentProfile(userId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${userId}`, { headers: this.authService.getAuthHeaders() });
+    return this.http.get<any>(`${this.apiUrl}/get/${userId}`, { headers: this.authService.getAuthHeaders() });
+  }
+
+  getUserGrade() {
+    return this.http.get<any>(`${this.apiUrl}/grade`, { headers: this.authService.getAuthHeaders() });
   }
 
   updateUserProfile(data: any): Observable<any> {

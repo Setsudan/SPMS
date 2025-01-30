@@ -347,3 +347,5 @@ Using Kubernetes:
 ```sh
 kubectl apply -f infra/k8s/deployment.yml
 ```
+
+---
