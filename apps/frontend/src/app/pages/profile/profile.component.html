@@ -55,7 +55,7 @@
       </li>
     </ul>
 
-    <button *ngIf="isOwnProfile()" routerLink="/edit-profile">
+    <button *ngIf="isOwnProfile()" (click)="router.navigate(['edit-profile'])">
       Edit Profile
     </button>
   </div>

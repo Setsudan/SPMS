@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { NgFor, NgIf } from '@angular/common';
@@ -16,6 +16,7 @@ export class ProfileComponent {
   private userService = inject(UserService);
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
+  router = inject(Router);
 
   userProfile = signal<any>(null);
   isOwnProfile = signal<boolean>(false);
