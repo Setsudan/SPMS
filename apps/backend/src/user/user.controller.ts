@@ -9,6 +9,7 @@ import {
   ForbiddenException,
   Post,
   Req,
+  Logger,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -38,9 +39,19 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
+  @Get('get/:id')
   async getUserById(@Param('id') id: string) {
     return this.userService.getUserProfile(id);
+  }
+
+   @UseGuards(JwtAuthGuard)
+  @Get('grade')
+  async getGrade(@Req() req: RequestWithUser) { // Get the authenticated user's grade
+    const userId = req.user?.id;
+    Logger.log(`Getting grade for user ${userId}`);
+    if (!userId) throw new Error('User ID missing from request');
+
+    return this.userService.getGrade(userId);
   }
 
   // Skills
@@ -52,4 +63,6 @@ export class UserController {
 
     return this.userService.addSkillToUser(userId, body.skillId, body.ability);
   }
+
+ 
 }

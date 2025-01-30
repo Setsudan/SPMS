@@ -13,30 +13,25 @@ export class UserService {
   private authService = inject(AuthService);
   private apiUrl =`${environment.API_URL}` + 'users';
 
-  private getAuthHeaders(): HttpHeaders {
-    const token = this.authService.getToken();
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-  }
-
-  // 🔍 Get logged-in user profile (FIXED, uses /users/profile)
   getUserProfile(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/profile`, { headers: this.getAuthHeaders() });
+    return this.http.get<any>(`${this.apiUrl}/profile`, { headers: this.authService.getAuthHeaders() });
   }
 
   getStudentProfile(userId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${userId}`, { headers: this.getAuthHeaders() });
+    return this.http.get<any>(`${this.apiUrl}/get/${userId}`, { headers: this.authService.getAuthHeaders() });
+  }
+
+  getUserGrade() {
+    return this.http.get<any>(`${this.apiUrl}/grade`, { headers: this.authService.getAuthHeaders() });
   }
 
   updateUserProfile(data: any): Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/profile`, data, { headers: this.getAuthHeaders() });
+    return this.http.patch<any>(`${this.apiUrl}/profile`, data, { headers: this.authService.getAuthHeaders() });
   }
 
   getStudentsByGrade(gradeId: string): Observable<any[]> {
     console.log('fetching',`http://localhost:5000/grades/${gradeId}/students`)
-    return this.http.get<any[]>(`http://localhost:5000/grades/${gradeId}/students`, { headers: this.getAuthHeaders() });
+    return this.http.get<any[]>(`http://localhost:5000/grades/${gradeId}/students`, { headers: this.authService.getAuthHeaders() });
   }
 
   addSkillToProfile(userId: string, skillId: string, ability: number): Observable<UserSkill> {
@@ -46,6 +41,6 @@ export class UserService {
     return this.http.post<UserSkill>(`${this.apiUrl}/${userId}/skills`, {
       skillId,
       ability,
-    }, { headers: this.getAuthHeaders() });
+    }, { headers: this.authService.getAuthHeaders() });
   }
 }

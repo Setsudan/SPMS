@@ -1,0 +1,13 @@
+<div class="mentorship-container">
+  <h2>Available Mentors</h2>
+  <ul>
+    <li *ngFor="let mentor of mentors">
+      <div class="mentor-info">
+        <img [src]="mentor.face || 'default-avatar.png'" alt="Mentor Profile" />
+        <p>{{ mentor.firstName }} {{ mentor.lastName }}</p>
+        <small>Graduation Year: {{ mentor.grade.graduationYear }}</small>
+      </div>
+      <button (click)="requestMentor(mentor.id)">Request Mentorship</button>
+    </li>
+  </ul>
+</div>
