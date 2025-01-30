@@ -4,15 +4,16 @@ import {
   FormGroup,
   FormArray,
   Validators,
-  AbstractControl,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { UserService } from '../../services/user/user.service';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth/auth.service';
 import { NgFor, NgIf } from '@angular/common';
-import { User } from '../../models/types';
+
+import { UserService } from '../../services/user/user.service';
 import { SkillsService } from '../../services/skills/skills.service';
+import { AuthService } from '../../services/auth/auth.service';
+
+import { User, SocialLink } from '../../models/types';
 
 @Component({
   selector: 'app-edit-profile',
@@ -32,10 +33,9 @@ export class EditProfileComponent {
   userProfile = signal<User | null>(null);
   loading = signal<boolean>(true);
   errorMessage = signal<string | null>(null);
-
   skillList = signal<{ id: string; name: string }[]>([]);
   filteredSkills = signal<{ id: string; name: string }[]>([]);
-  selectedSkills = signal<{ name: string; ability: number }[]>([]);
+  linkTypeOptions = ['LinkedIn', 'GitHub', 'Twitter', 'Website'];
 
   constructor() {
     this.profileForm = this.fb.group({
@@ -49,7 +49,6 @@ export class EditProfileComponent {
     this.fetchSkills();
   }
 
-  /** Load user profile and populate the form */
   private loadUserProfile() {
     this.userService.getUserProfile().subscribe({
       next: (user: User) => {
@@ -59,129 +58,163 @@ export class EditProfileComponent {
           face: user.face || '',
         });
 
-        // Populate social links
-        const socialLinksArray = this.fb.array(
-          (user.socialLinks || []).map(link => this.fb.control(link))
+        // Skills Form Array
+        const skillsFormArray = this.fb.array(
+          (user.skills || []).map(skill =>
+            this.fb.group({
+              skillId: [skill.skill.id],
+              name: [skill.skill.name],
+              ability: [skill.ability, [Validators.min(0), Validators.max(5)]],
+            })
+          )
         );
-        this.profileForm.setControl('socialLinks', socialLinksArray);
+        this.profileForm.setControl('skills', skillsFormArray);
 
-        // Populate selected skills
-        const selectedSkillsArray = user.skills?.map(skill =>
-          this.createSkillGroup(skill.skill.name, skill.ability)
+        const socialLinksFormArray = this.fb.array(
+          (user.socialLinks || []).map(link =>
+            this.fb.group({
+              type: [link.type || ''],
+              url: [link.url || ''],
+            })
+          )
         );
-        this.profileForm.setControl(
-          'skills',
-          this.fb.array(selectedSkillsArray || [])
-        );
-
-        this.selectedSkills.set(
-          user.skills?.map(skill => ({
-            name: skill.skill.name,
-            ability: skill.ability,
-          })) || []
-        );
+        this.profileForm.setControl('socialLinks', socialLinksFormArray);
 
         this.loading.set(false);
       },
-      error: err => {
+      error: () => {
         this.errorMessage.set('Failed to load user profile.');
         this.loading.set(false);
       },
     });
   }
 
-  /** Fetch available skills from the server */
   private fetchSkills() {
     this.skillsService.getSkills().subscribe({
-      next: skills => {
+      next: (skills) => {
         this.skillList.set(skills);
         this.filteredSkills.set(skills);
       },
-      error: err => {
-        console.error('Error fetching skills:', err);
-      },
+      error: (err) => console.error('Error fetching skills:', err),
     });
   }
 
-  /** Creates a FormGroup for skills */
-  private createSkillGroup(skillName: string, ability: number) {
-    return this.fb.group({
-      name: [skillName],
-      ability: [ability, [Validators.min(0), Validators.max(5)]],
-    });
+  /** Search & Filter Skills */
+  onSkillInput(event: Event) {
+    const query = (event.target as HTMLInputElement)?.value || '';
+    this.filterSkills(query);
   }
 
-  /** Filters the skills list based on user input */
   filterSkills(query: string) {
     const lowerQuery = query.toLowerCase();
+    const skillsFormArray = this.profileForm.get('skills') as FormArray;
+    const existingIds = new Set(
+      skillsFormArray.controls.map(ctrl => ctrl.get('skillId')?.value)
+    );
+
     this.filteredSkills.set(
-      this.skillList().filter(skill => skill.name.toLowerCase().includes(lowerQuery))
+      this.skillList().filter(skill => {
+        const matchesQuery = skill.name.toLowerCase().includes(lowerQuery);
+        const notAlreadySelected = !existingIds.has(skill.id);
+        return matchesQuery && notAlreadySelected;
+      })
     );
   }
 
-  /** Handles skill input changes */
-  onSkillInput(event: Event) {
-    const inputValue = (event.target as HTMLInputElement)?.value || '';
-    this.filterSkills(inputValue);
-  }
-
-  /** Adds a selected skill to the form */
-  addSkill(skill: { name: string }) {
+  /** Add a skill (no required fields to block submission) */
+  addSkill(skill: { id: string; name: string }) {
     const skillsFormArray = this.profileForm.get('skills') as FormArray;
+    // Prevent duplicates
+    if (skillsFormArray.controls.some(control => control.get('skillId')?.value === skill.id)) return;
 
-    // Prevent duplicate skills
-    if (this.selectedSkills().some(s => s.name === skill.name)) return;
-
-    const newSkill = { name: skill.name, ability: 1 };
-    this.selectedSkills.set([...this.selectedSkills(), newSkill]);
-
-    skillsFormArray.push(this.createSkillGroup(skill.name, 1));
+    skillsFormArray.push(
+      this.fb.group({
+        skillId: [skill.id],
+        name: [skill.name],
+        ability: [1, [Validators.min(0), Validators.max(5)]],
+      })
+    );
   }
 
-  /** Removes a skill from the form */
   removeSkill(index: number) {
     const skillsFormArray = this.profileForm.get('skills') as FormArray;
     skillsFormArray.removeAt(index);
-
-    const updatedSkills = this.selectedSkills().filter((_, i) => i !== index);
-    this.selectedSkills.set(updatedSkills);
   }
 
-  /** Returns form controls for social links */
-  getSocialLinksControls(): AbstractControl[] {
-    return (this.profileForm.get('socialLinks') as FormArray).controls;
+  /** Social Links */
+  addSocialLink() {
+    const socialLinksFormArray = this.profileForm.get('socialLinks') as FormArray;
+    socialLinksFormArray.push(this.fb.group({ type: '', url: '' }));
   }
 
-  /** Returns form controls for skills */
-  getSkillsControls(): AbstractControl[] {
-    return (this.profileForm.get('skills') as FormArray).controls;
+  removeSocialLink(index: number) {
+    const socialLinksFormArray = this.profileForm.get('socialLinks') as FormArray;
+    socialLinksFormArray.removeAt(index);
   }
 
-  /** Submits the profile form */
+  getSocialLinksControls(): FormGroup[] {
+    return (this.profileForm.get('socialLinks') as FormArray).controls as FormGroup[];
+  }
+
+  getSkillsControls(): FormGroup[] {
+    return (this.profileForm.get('skills') as FormArray).controls as FormGroup[];
+  }
+
+  /** Submit the form */
   saveChanges() {
-    if (this.profileForm.invalid) return;
+    // 🏁 3) If invalid, log out exactly what's wrong
+    if (this.profileForm.invalid) {
+      console.log('Form is invalid:', this.profileForm.errors);
 
-    this.loading.set(true);
-    const userId = this.userProfile()?.id;
-    if (!userId) {
-      this.errorMessage.set('User ID is missing.');
-      this.loading.set(false);
+      // Log top-level controls & each array item
+      Object.entries(this.profileForm.controls).forEach(([key, ctrl]) => {
+        console.log(`Control: ${key}, Status: ${ctrl.status}, Errors:`, ctrl.errors);
+      });
+
+      const socialLinksArray = this.profileForm.get('socialLinks') as FormArray;
+      socialLinksArray.controls.forEach((ctrl, i) => {
+        console.log(`Social Link #${i}:`, ctrl.status, ctrl.errors);
+        console.log('--type errors:', ctrl.get('type')?.errors);
+        console.log('--url errors:', ctrl.get('url')?.errors);
+      });
+
+      const skillsArray = this.profileForm.get('skills') as FormArray;
+      skillsArray.controls.forEach((ctrl, i) => {
+        console.log(`Skill #${i}:`, ctrl.status, ctrl.errors);
+        console.log('--ability errors:', ctrl.get('ability')?.errors);
+      });
       return;
     }
 
-    this.userService.updateUserProfile(this.profileForm.value).subscribe({
+    const formValue = this.profileForm.value;
+    const payload = {
+      bio: formValue.bio,
+      face: formValue.face,
+      socialLinks: formValue.socialLinks.map((link: SocialLink) => ({
+        type: link.type,
+        url: link.url,
+      })),
+      skills: formValue.skills.map((skill: { skillId: any; ability: any }) => ({
+        skillId: skill.skillId,
+        ability: skill.ability,
+      })),
+    };
+
+    console.log('Saving changes:', payload);
+
+    this.loading.set(true);
+    this.userService.updateUserProfile(payload).subscribe({
       next: () => {
         this.loading.set(false);
         this.router.navigate(['/profile']);
       },
-      error: err => {
+      error: (err) => {
         this.errorMessage.set(err.error.message || 'An error occurred while updating.');
         this.loading.set(false);
       },
     });
   }
 
-  /** Checks if the form is loading */
   isLoading(): boolean {
     return this.loading();
   }

@@ -1,32 +1,31 @@
-import { IsOptional, IsString, IsArray, ValidateNested, IsInt, Min, Max } from 'class-validator';
+import { IsOptional, IsString, IsUrl, MaxLength, IsArray, ValidateNested, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class SocialLinkDto {
   @IsString()
-  type!: string; // Required field
+  type!: string;
 
-  @IsString()
-  url!: string; // Required field
+  @IsUrl()
+  url!: string;
 }
 
-class SkillUpdateDto {
+class SkillDto {
   @IsString()
-  skillId!: string; // Required field
+  skillId!: string;
 
-  @IsOptional()
-  @IsInt()
-  @Min(1)
+  @Min(0)
   @Max(5)
-  ability?: number; // Ensure ability is between 1-5
+  ability!: number;
 }
 
 export class UpdateUserDto {
   @IsOptional()
   @IsString()
+  @MaxLength(500)
   bio?: string;
 
   @IsOptional()
-  @IsString()
+  @IsUrl()
   face?: string;
 
   @IsOptional()
@@ -38,6 +37,6 @@ export class UpdateUserDto {
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => SkillUpdateDto)
-  skills?: SkillUpdateDto[];
+  @Type(() => SkillDto)
+  skills?: SkillDto[];
 }

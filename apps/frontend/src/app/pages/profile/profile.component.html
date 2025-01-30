@@ -28,11 +28,14 @@
     </p>
 
     <h3>Social Links</h3>
-    <ul>
+    <ul *ngIf="userProfile().socialLinks.length; else noLinks">
       <li *ngFor="let link of userProfile().socialLinks">
         <a [href]="link.url" target="_blank">{{ link.type }}</a>
       </li>
     </ul>
+    <ng-template #noLinks>
+      <p>No social links available.... Or is that batman ?</p>
+    </ng-template>
 
     <h3>Skills</h3>
     <ul>
@@ -44,9 +47,15 @@
           <span *ngFor="let i of [].constructor(skill.ability)">💻</span>
         </div>
       </li>
+      <li *ngIf="!userProfile().skills.length">
+        <p>
+          The user prefers to keep their skills under wraps, like a true
+          superhero.
+        </p>
+      </li>
     </ul>
 
-    <button *ngIf="isOwnProfile()" routerLink="/edit-profile">
+    <button *ngIf="isOwnProfile()" (click)="router.navigate(['edit-profile'])">
       Edit Profile
     </button>
   </div>

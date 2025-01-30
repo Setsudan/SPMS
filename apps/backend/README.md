@@ -228,3 +228,17 @@ http://localhost:5000/api/docs
 ✅ Should connect to the database on module init
 ✅ Should disconnect from the database on module destroy
 ✅ Should return the PrismaClient instance
+
+## Skill
+
+### SkillService
+
+#### getAllSkills
+
+✅ Should return an array of skills
+✅ Should return an empty array if no skills are found
+
+#### getSkillByName
+
+✅ Should return a skill if found
+✅ Should throw NotFoundException if skill is not found
