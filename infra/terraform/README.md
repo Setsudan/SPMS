@@ -69,36 +69,41 @@ terraform apply
 az acr login --name registrefrance1
 ```
 
-#### 🇩🇪 Allemagne
-```powershell
-az acr login --name registreallemagne1
-```
+
 
 ### 2️⃣ **Tagger et Pousser les images Docker**
 #### 🇫🇷 France
 ```powershell
-docker tag postgres:latest registrefrance1.azurecr.io/postgres:latest
-docker tag redis:alpine registrefrance1.azurecr.io/redis:alpine
-docker tag infra-backend registrefrance1.azurecr.io/backend:latest
-docker tag infra-frontend registrefrance1.azurecr.io/frontend:latest
+docker tag postgres:latest registrefrance1.azurecr.io/postgres:15
+docker push registrefrance1.azurecr.io/postgres:15
 
-docker push registrefrance1.azurecr.io/postgres:latest
+docker tag redis:alpine registrefrance1.azurecr.io/redis:alpine
 docker push registrefrance1.azurecr.io/redis:alpine
+
+docker tag infra-backend registrefrance1.azurecr.io/backend:latest
 docker push registrefrance1.azurecr.io/backend:latest
+
+docker tag infra-frontend registrefrance1.azurecr.io/frontend:latest
 docker push registrefrance1.azurecr.io/frontend:latest
 
 ```
 
-#### 🇩'Allemagne
+#### Login 🇩'Allemagne
 ```powershell
-docker tag postgres:latest registreallemagne1.azurecr.io/postgres:latest
-docker tag redis:alpine registreallemagne1.azurecr.io/redis:alpine
-docker tag infra-backend registreallemagne1.azurecr.io/backend:latest
-docker tag infra-frontend registreallemagne1.azurecr.io/frontend:latest 
+az acr login --name registreallemagne1
+```
+#### Push 🇩'Allemagne
+```powershell
+docker tag postgres:15 registreallemagne1.azurecr.io/postgres:15
+docker push registreallemagne1.azurecr.io/postgres:15
 
-docker push registreallemagne1.azurecr.io/postgres:latest
+docker tag redis:alpine registreallemagne1.azurecr.io/redis:alpine
 docker push registreallemagne1.azurecr.io/redis:alpine
+
+docker tag infra-backend registreallemagne1.azurecr.io/backend:latest
 docker push registreallemagne1.azurecr.io/backend:latest
+
+docker tag infra-frontend registreallemagne1.azurecr.io/frontend:latest 
 docker push registreallemagne1.azurecr.io/frontend:latest
 
 ```

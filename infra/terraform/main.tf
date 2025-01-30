@@ -48,7 +48,7 @@ resource "azurerm_container_group" "postgres" {
 
   container {
     name   = "postgres"
-    image  = "${each.key == "france" ? azurerm_container_registry.acr_france.login_server : azurerm_container_registry.acr_germany.login_server}/postgres:latest"
+    image  = "${each.key == "france" ? azurerm_container_registry.acr_france.login_server : azurerm_container_registry.acr_germany.login_server}/postgres:15"
     cpu    = "1"
     memory = "1.5"
 
@@ -114,7 +114,7 @@ resource "azurerm_container_group" "backend" {
 
   container {
     name   = "backend"
-    image  = "${each.key == "france" ? azurerm_container_registry.acr_france.login_server : azurerm_container_registry.acr_germany.login_server}/ backend:latest"
+    image  = "${each.key == "france" ? azurerm_container_registry.acr_france.login_server : azurerm_container_registry.acr_germany.login_server}/backend:latest"
     cpu    = "1"
     memory = "1.5"
 
@@ -124,18 +124,18 @@ resource "azurerm_container_group" "backend" {
     }
 
     environment_variables = {
-      DATABASE_HOST = "postgres-container-${each.key}"
-      REDIS_HOST    = "redis-container-${each.key}"
+      DATABASE_HOST = azurerm_container_group.postgres[each.key].ip_address
       DATABASE_PORT = "5432"
+      REDIS_HOST    = azurerm_container_group.redis[each.key].ip_address
       REDIS_PORT    = "6379"
     }
+
   }
   image_registry_credential {
     server   = each.key == "france" ? azurerm_container_registry.acr_france.login_server : azurerm_container_registry.acr_germany.login_server
     username = each.key == "france" ? azurerm_container_registry.acr_france.admin_username : azurerm_container_registry.acr_germany.admin_username
     password = each.key == "france" ? azurerm_container_registry.acr_france.admin_password : azurerm_container_registry.acr_germany.admin_password
   }
-
 }
 
 # Déploiement Frontend
@@ -166,5 +166,4 @@ resource "azurerm_container_group" "frontend" {
     username = each.key == "france" ? azurerm_container_registry.acr_france.admin_username : azurerm_container_registry.acr_germany.admin_username
     password = each.key == "france" ? azurerm_container_registry.acr_france.admin_password : azurerm_container_registry.acr_germany.admin_password
   }
-
 }
