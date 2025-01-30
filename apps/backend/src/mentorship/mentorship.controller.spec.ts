@@ -57,8 +57,9 @@ describe("MentorshipService", () => {
         password: "hashed-password",
         face: null,
         bio: null,
-        gradeId: null,
+        gradeId: "some-grade-id", // Add a gradeId or grade to avoid the exception
         createdAt: new Date(),
+        grade: { id: "some-grade-id", name: "Senior" }, // Mock grade information
       };
 
       jest
