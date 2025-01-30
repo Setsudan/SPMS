@@ -12,10 +12,6 @@ async function bootstrap() {
     origin: "*",
   });
 
-  // Ajout de Prometheus
-  const collectDefaultMetrics = promClient.collectDefaultMetrics;
-  collectDefaultMetrics(); // Collecte les metrics qu'on a vu au tableau
-
   const config = new DocumentBuilder()
     .setTitle("Student Program API")
     .setDescription("API documentation for student collaboration platform")
@@ -32,11 +28,6 @@ async function bootstrap() {
 
   await gradesSeeder.seed();
   await skillsSeeder.seed();
-
-  app.use("/metrics", (req: Request, res: Response) => {
-    res.set("Content-Type", promClient.register.contentType);
-    res.end(promClient.register.metrics());
-  });
 
   await app.listen(5000);
 }

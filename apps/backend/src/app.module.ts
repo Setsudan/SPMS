@@ -6,6 +6,7 @@ import { MentorshipModule } from './mentorship/mentorship.module';
 import { MessagingModule } from './messaging/messaging.module';
 import { GradesModule } from './grades/grades.module';
 import { SkillModule } from './skill/skill.module';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { SkillModule } from './skill/skill.module';
     MessagingModule,
     GradesModule,
     SkillModule,
+    MetricsModule,
   ],
 })
 export class AppModule { }
