@@ -3,6 +3,10 @@ node_modules
 .vscode
 .angular
 infra/.env
-infra/terraform.tfstate
-infra/terraform.tfvars
-.terraform/
+# 📌 Terraform (Exclure fichiers sensibles et état Terraform)
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/terraform.tfvars
+*.exe
