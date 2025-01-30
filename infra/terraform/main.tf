@@ -114,7 +114,7 @@ resource "azurerm_container_group" "backend" {
 
   container {
     name   = "backend"
-    image  = "${each.key == "france" ? azurerm_container_registry.acr_france.login_server : azurerm_container_registry.acr_germany.login_server}/backend:latest"
+    image  = "${each.key == "france" ? azurerm_container_registry.acr_france.login_server : azurerm_container_registry.acr_germany.login_server}/ backend:latest"
     cpu    = "1"
     memory = "1.5"
 
@@ -130,17 +130,8 @@ resource "azurerm_container_group" "backend" {
       REDIS_PORT    = "6379"
     }
   }
-
-  image_registry_credential {
-    server   = each.key == "france" ? azurerm_container_registry.acr_france.login_server : azurerm_container_registry.acr_germany.login_server
-    username = each.key == "france" ? azurerm_container_registry.acr_france.admin_username : azurerm_container_registry.acr_germany.admin_username
-    password = each.key == "france" ? azurerm_container_registry.acr_france.admin_password : azurerm_container_registry.acr_germany.admin_password
-  }
-
-  tags = {
-    environment = "production"
-  }
 }
+
 # Déploiement Frontend
 resource "azurerm_container_group" "frontend" {
   for_each            = azurerm_resource_group.rg
@@ -164,15 +155,4 @@ resource "azurerm_container_group" "frontend" {
       BACKEND_URL = "http://backend-container-${each.key}:3000"
     }
   }
-
-  image_registry_credential {
-    server   = each.key == "france" ? azurerm_container_registry.acr_france.login_server : azurerm_container_registry.acr_germany.login_server
-    username = each.key == "france" ? azurerm_container_registry.acr_france.admin_username : azurerm_container_registry.acr_germany.admin_username
-    password = each.key == "france" ? azurerm_container_registry.acr_france.admin_password : azurerm_container_registry.acr_germany.admin_password
-  }
-
-  tags = {
-    environment = "production"
-  }
 }
-
