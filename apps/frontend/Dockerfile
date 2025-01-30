@@ -1,31 +1,30 @@
-# Use Node.js 18 as base image
+# ---- Stage 1: Build Angular App ----
 FROM node:20-alpine AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files
 COPY package.json yarn.lock ./
-
-# Install dependencies
 RUN yarn install --frozen-lockfile
 
-# Copy the rest of the application
 COPY . .
 
-# Build the Angular application
 RUN yarn build --configuration=production
 
-# ---- Production Stage ----
+# ---- Stage 2: Serve with Nginx ----
 FROM nginx:alpine
 
 WORKDIR /usr/share/nginx/html
 
-# Copy built Angular files from the builder stage
-COPY --from=builder /app/dist/frontend ./
+# 🛑 Remove all default Nginx content
+RUN rm -rf /usr/share/nginx/html/* /etc/nginx/conf.d/*
 
-# Expose the port used by Nginx
+# ✅ Copy built Angular files
+COPY --from=builder /app/dist/frontend/browser/ ./
+
+# ✅ Copy the correct Nginx config
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
 
-# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
+
