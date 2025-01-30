@@ -6,57 +6,54 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async updateProfile(userId: string, dto: UpdateUserDto) {
-    const restrictedFields = ['firstName', 'lastName', 'email', 'gradeId', 'password'];
-    const attemptedKeys = Object.keys(dto);
-    const invalidFields = attemptedKeys.filter(key => restrictedFields.includes(key));
+ async updateProfile(userId: string, dto: UpdateUserDto) {
+  const restrictedFields = ['firstName', 'lastName', 'email', 'gradeId', 'password'];
+  const attemptedKeys = Object.keys(dto);
+  const invalidFields = attemptedKeys.filter(key => restrictedFields.includes(key));
 
-    if (invalidFields.length) {
-      throw new ForbiddenException(`You are not allowed to update: ${invalidFields.join(', ')}`);
-    }
+  if (invalidFields.length) {
+    throw new ForbiddenException(`You cannot update: ${invalidFields.join(', ')}`);
+  }
 
-    return this.prisma.client.user.update({
-      where: { id: userId },
-      data: {
-        bio: dto.bio ?? null,
-        face: dto.face ?? null,
-        socialLinks: dto.socialLinks
-          ? {
-              deleteMany: {}, // Remove old social links before updating
-              create: dto.socialLinks
-                .filter(link => Boolean(link.type) && Boolean(link.url)) // Ensure valid entries
-                .map(link => ({
-                  type: link.type!,
-                  url: link.url!,
-                })),
-            }
-          : undefined,
-        skills: dto.skills
-          ? {
-              upsert: dto.skills
-                .filter(skill => Boolean(skill.skillId)) // Ensure skillId is present
-                .map(skill => ({
-                  where: { studentId_skillId: { studentId: userId, skillId: skill.skillId! } },
-                  update: { ability: skill.ability ?? 1 }, // Default ability to 1 if undefined
-                  create: { skillId: skill.skillId!, ability: skill.ability ?? 1 },
-                })),
-            }
-          : undefined,
-      },
-      select: {
-        id: true,
-        bio: true,
-        face: true,
-        socialLinks: true,
-        skills: {
-          select: {
-            skill: { select: { name: true } },
-            ability: true,
-          },
+  return this.prisma.client.user.update({
+    where: { id: userId },
+    data: {
+      bio: dto.bio ?? undefined,
+      face: dto.face ?? undefined,
+      socialLinks: dto.socialLinks
+        ? {
+            deleteMany: {},
+            create: dto.socialLinks.map(link => ({
+              type: link.type,
+              url: link.url,
+            })),
+          }
+        : undefined,
+      skills: dto.skills
+        ? {
+            upsert: dto.skills.map(skill => ({
+              where: { studentId_skillId: { studentId: userId, skillId: skill.skillId } },
+              update: { ability: skill.ability },
+              create: { skillId: skill.skillId, ability: skill.ability },
+            })),
+          }
+        : undefined,
+    },
+    select: {
+      id: true,
+      bio: true,
+      face: true,
+      socialLinks: true,
+      skills: {
+        select: {
+          skill: { select: { name: true, id: true } },
+          ability: true,
         },
       },
-    });
-  }
+    },
+  });
+}
+
 
   async getUserProfile(userId: string) {
     const user = await this.prisma.client.user.findUnique({
@@ -72,7 +69,7 @@ export class UserService {
         socialLinks: true,
         skills: {
           select: {
-            skill: { select: { name: true } },
+            skill: { select: { name: true, id: true } },
             ability: true,
           },
         },

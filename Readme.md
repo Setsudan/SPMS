@@ -1,23 +1,24 @@
-# URL Shortener Project
+# **Student Program Management System**
 
-## Overview
+## **Overview**
 
-This project is a **multi-regional URL shortener** with **logging and analytics**, built using **TypeScript** and **Turbo Monorepo** for efficient development. It is designed to be **cloud-native**, containerized with **Docker**, and orchestrated via **Kubernetes (K8s)** for scalability.
+This project is a **student program management system** designed to handle **user authentication, student profiles, mentorship programs, messaging, and skill tracking**. Built with **Angular** for the frontend and **NestJS** for the backend, it uses **Turborepo** for efficient monorepo management.
 
-## Tech Stack
+## **Tech Stack**
 
 ### **Backend**
 
 - **Language:** TypeScript
-- **Framework:** Fastify
+- **Framework:** NestJS (Fastify adapter)
 - **Database:** PostgreSQL (via Prisma ORM)
-- **Cache:** Redis (for fast URL resolution & rate limiting) <- Si j'ai pas la flemme
-- **Queue System:** BullMQ (Redis-based job queue for logging analytics asynchronously) <- Si j'ai pas la flemme
+- **Authentication:** JWT-based authentication
+- **Caching (Optional):** Redis (for performance enhancements)
+- **Queue System (Optional):** BullMQ (Redis-based job queue)
 
 ### **Frontend**
 
 - **Framework:** Angular
-- **Styling:** Scss
+- **Styling:** SCSS
 
 ### **Infrastructure**
 
@@ -27,12 +28,12 @@ This project is a **multi-regional URL shortener** with **logging and analytics*
 - **Monitoring:** Prometheus + Grafana (metrics), Loki (logs)
 - **Ingress Controller:** Nginx + Cert-Manager (for TLS with Let's Encrypt)
 
-## Project Structure
+## **Project Structure**
 
 ```
-url-shortener/
+student-management-system/
 │── apps/
-│   ├── backend/         # Express API (TypeScript)
+│   ├── backend/         # NestJS API
 │   ├── frontend/        # Angular UI
 │── infra/               # Kubernetes, Docker, CI/CD
 │── .github/workflows/   # GitHub Actions
@@ -42,23 +43,25 @@ url-shortener/
 │── README.md
 ```
 
-## Setup & Installation
+## **Setup & Installation**
 
 ### **Prerequisites**
 
 - Node.js & Yarn
 - Docker & Kubernetes
-- PostgreSQL & Redis
+- PostgreSQL & Redis (if using cache or queue)
 
 ### **1️⃣ Clone the Repository**
 
 ```sh
-git clone https://github.com/setsudan/url-shortener.git
-cd url-shortener
+git clone https://github.com/setsudan/student-management-system.git
+cd student-management-system
 yarn install
 ```
 
-Entre cette étapes et la suivantes n'oubliez pas de setup vos variables environnementales (voir les .env.example dans `apps/backend` et `infra`)
+| Yes the url is not this one yet we're waiting some changes before updating it |
+
+⚠️ Before proceeding, make sure to configure your environment variables by checking `.env.example` files in `apps/backend` and `infra`.
 
 ### **2️⃣ Build & Run Docker Locally**
 
@@ -72,13 +75,13 @@ docker-compose up -d
 yarn workspace backend prisma migrate dev --name init
 ```
 
-### **4 Run Backend Migrations**
+### **4️⃣ Generate Prisma Client**
 
 ```sh
 yarn workspace backend prisma generate
 ```
 
-### **5 Start the Local Development Environment**
+### **5️⃣ Start the Local Development Environment**
 
 ```sh
 yarn turbo dev
@@ -86,45 +89,261 @@ yarn turbo dev
 
 This runs both **backend** & **frontend** in parallel.
 
-## API Endpoints
+---
 
-### **Shorten a URL**
+## **API Endpoints**
 
-**POST** `/shorten`
+You can also access it on [http://localhost:5000/api/docs](http://localhost:5000/api/docs) once the project is running.
 
-#### **Request:**
+### **Authentication**
+
+#### **Register a User**
+
+**POST** `/auth/register`
+
+**Request:**
 
 ```json
 {
-  "url": "https://example.com"
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "johndoe@example.com",
+  "password": "securepassword",
+  "gradeId": "bachelor-web-2025"
 }
 ```
 
-#### **Response:**
+**Response:**
 
 ```json
 {
-  "shortUrl": "http://localhost:5000/abc123"
+  "message": "User registered successfully",
+  "user": {
+    "id": "123",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "johndoe@example.com",
+    "grade": "Bachelor Développeur Web",
+    "graduationYear": "P2025"
+  }
 }
 ```
 
-### **Redirect to Original URL**
+#### **Login**
 
-**GET** `/:shortUrl`
+**POST** `/auth/login`
 
-#### **Response:**
-
-Redirects to the original URL.
-
-### **Get URL Stats**
-
-**GET** `/stats/:shortUrl`
-
-#### **Response:**
+**Request:**
 
 ```json
 {
-  "clicks": 120,
-  "createdAt": "2025-01-27T12:00:00Z"
+  "email": "johndoe@example.com",
+  "password": "securepassword"
 }
+```
+
+**Response:**
+
+```json
+{
+  "access_token": "JWT_TOKEN_HERE"
+}
+```
+
+---
+
+### **User Profile**
+
+#### **Get Current User Profile**
+
+**GET** `/users/profile`
+
+**Headers:**
+
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN_HERE"
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": "123",
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "johndoe@example.com",
+  "bio": "I am a developer",
+  "face": "https://example.com/avatar.jpg",
+  "grade": {
+    "name": "Bachelor Développeur Web",
+    "graduationYear": "P2025"
+  },
+  "socialLinks": [
+    { "type": "GitHub", "url": "https://github.com/johndoe" }
+  ],
+  "skills": [
+    { "skill": { "name": "JavaScript" }, "ability": 4 }
+  ]
+}
+```
+
+#### **Update User Profile**
+
+**PUT** `/users/profile`
+
+**Headers:**
+
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN_HERE"
+}
+```
+
+**Request:**
+
+```json
+{
+  "bio": "Updated bio",
+  "face": "https://example.com/new-avatar.jpg",
+  "socialLinks": [
+    { "type": "LinkedIn", "url": "https://linkedin.com/in/johndoe" }
+  ],
+  "skills": [
+    { "skillId": "typescript", "ability": 5 }
+  ]
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": "123",
+  "bio": "Updated bio",
+  "face": "https://example.com/new-avatar.jpg",
+  "socialLinks": [
+    { "type": "LinkedIn", "url": "https://linkedin.com/in/johndoe" }
+  ],
+  "skills": [
+    { "skill": { "name": "TypeScript" }, "ability": 5 }
+  ]
+}
+```
+
+---
+
+### **Skills Management**
+
+#### **Get All Skills**
+
+**GET** `/skills`
+**Response:**
+
+```json
+[
+  { "id": "javascript", "name": "JavaScript", "description": "Frontend & Backend development" },
+  { "id": "typescript", "name": "TypeScript", "description": "Strictly typed JavaScript" }
+]
+```
+
+#### **Get Skill by Name**
+
+**GET** `/skills/:name`
+**Response:**
+
+```json
+{
+  "id": "typescript",
+  "name": "TypeScript",
+  "description": "Strictly typed JavaScript"
+}
+```
+
+#### **Add a Skill to User Profile**
+
+**POST** `/users/profile/skills`
+
+**Headers:**
+
+```json
+{
+  "Authorization": "Bearer JWT_TOKEN_HERE"
+}
+```
+
+**Request:**
+
+```json
+{
+  "skillId": "typescript",
+  "ability": 4
+}
+```
+
+**Response:**
+
+```json
+{
+  "message": "Skill added successfully",
+  "skill": {
+    "skill": { "name": "TypeScript" },
+    "ability": 4
+  }
+}
+```
+
+---
+
+### **Grades & Students**
+
+#### **Get All Grades**
+
+**GET** `/grades`
+**Response:**
+
+```json
+[
+  { "id": "bachelor-web-2025", "name": "Bachelor Développeur Web", "graduationYear": "P2025" },
+  { "id": "grande-ecole-2027", "name": "Programme Grande École", "graduationYear": "P2027" }
+]
+```
+
+#### **Get Students by Grade**
+
+**GET** `/grades/:gradeId/students`
+**Response:**
+
+```json
+[
+  { "id": "123", "firstName": "John", "lastName": "Doe", "email": "johndoe@example.com" },
+  { "id": "124", "firstName": "Jane", "lastName": "Smith", "email": "janesmith@example.com" }
+]
+```
+
+---
+
+## **Running Tests**
+
+To run unit tests:
+
+```sh
+yarn turbo test
+```
+
+---
+
+## **Deployment**
+
+Using Docker:
+
+```sh
+docker-compose up --build -d
+```
+
+Using Kubernetes:
+
+```sh
+kubectl apply -f infra/k8s/deployment.yml
 ```
