@@ -16,6 +16,7 @@ export class ChatPageComponent implements OnInit {
   userProfile = signal<User | null>(null);
   userId!: string;
   receiverId!: string;
+  receiverProfile = signal<User | null>(null);
   messages: Message[] = [];
   isUserLoaded = false;
 
@@ -33,6 +34,10 @@ export class ChatPageComponent implements OnInit {
       this.userId = user.id;
       this.isUserLoaded = true;
       this.loadMessages();
+    });
+
+    this.userService.getStudentProfile(this.receiverId).subscribe((user: User) => {
+      this.receiverProfile.set(user);
     });
   }
 

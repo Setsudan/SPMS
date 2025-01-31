@@ -1,5 +1,5 @@
 <div class="chat-container">
-  <h2>Chat with {{ receiverId }}</h2>
+  <h2>Chat with {{ receiverProfile()?.firstName }}</h2>
 
   <!-- Message List -->
   <div class="message-list">
@@ -9,8 +9,12 @@
         [class.unread]="!msg.read"
         (click)="markAsRead(msg)"
       >
-        <strong *ngIf="msg.senderId !== userId">Friend:</strong>
-        <strong *ngIf="msg.senderId === userId">You:</strong>
+        <strong *ngIf="msg.senderId !== userId"
+          >{{ receiverProfile()?.firstName }} :</strong
+        >
+        <strong *ngIf="msg.senderId === userId"
+          >{{ userProfile()?.firstName }} :</strong
+        >
         {{ msg.content }}
       </li>
     </ul>
