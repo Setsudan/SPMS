@@ -57,19 +57,34 @@ describe("MentorshipService", () => {
         password: "hashed-password",
         face: null,
         bio: null,
-        gradeId: null,
+        gradeId: "receiver-grade-id",
         createdAt: new Date(),
+        grade: { id: "receiver-grade-id", name: "Senior" },
+      };
+
+      const mockSender = {
+        id: "user-id",
+        firstName: "Jane",
+        lastName: "Doe",
+        email: "jane.doe@example.com",
+        password: "hashed-password",
+        face: null,
+        bio: null,
+        gradeId: "sender-grade-id",
+        createdAt: new Date(),
+        grade: { id: "sender-grade-id", name: "Junior" },
       };
 
       jest
         .spyOn(prismaService.client.user, "findUnique")
-        .mockResolvedValue(mockReceiver);
+        .mockResolvedValueOnce(mockReceiver)
+        .mockResolvedValueOnce(mockSender);
 
       const dto = { receiverId: "receiver-id" };
       jest.spyOn(prismaService.client.request, "create").mockResolvedValue({
         id: "request-id",
         createdAt: new Date(),
-        senderId: "sender-id",
+        senderId: "user-id", // Correct senderId to match the actual one
         receiverId: "receiver-id",
         status: "pending",
         message: null,
@@ -80,7 +95,7 @@ describe("MentorshipService", () => {
       expect(result).toEqual({
         id: "request-id",
         createdAt: expect.any(Date),
-        senderId: "sender-id",
+        senderId: "user-id", // Updated to "user-id"
         receiverId: "receiver-id",
         status: "pending",
         message: null,
@@ -88,7 +103,7 @@ describe("MentorshipService", () => {
 
       expect(prismaService.client.request.create).toHaveBeenCalledWith({
         data: {
-          senderId: "user-id",
+          senderId: "user-id", // Also updated here to match the actual senderId
           receiverId: "receiver-id",
           status: "pending",
         },

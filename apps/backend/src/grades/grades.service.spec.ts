@@ -30,8 +30,8 @@ describe("GradesService", () => {
                           firstName: "John",
                           lastName: "Doe",
                           email: "john@example.com",
-                          bio: "Student bio", // Ajout du champ bio
-                          face: "face-image-url", // Ajout du champ face
+                          bio: "Student bio",
+                          face: "face-image-url",
                         },
                       ]
                     : []
@@ -63,8 +63,8 @@ describe("GradesService", () => {
         firstName: "John",
         lastName: "Doe",
         email: "john@example.com",
-        bio: "Student bio", // Ajout du champ bio dans les attentes
-        face: "face-image-url", // Ajout du champ face dans les attentes
+        bio: "Student bio",
+        face: "face-image-url",
       },
     ]);
 
@@ -75,8 +75,8 @@ describe("GradesService", () => {
         firstName: true,
         lastName: true,
         email: true,
-        bio: true, // Inclure bio dans la sélection attendue
-        face: true, // Inclure face dans la sélection attendue
+        bio: true,
+        face: true,
       },
     });
   });
@@ -91,8 +91,8 @@ describe("GradesService", () => {
         firstName: true,
         lastName: true,
         email: true,
-        bio: true, // Inclure bio dans la sélection attendue
-        face: true, // Inclure face dans la sélection attendue
+        bio: true,
+        face: true,
       },
     });
   });

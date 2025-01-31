@@ -90,6 +90,7 @@ describe("UserController", () => {
           {
             skillId: "1",
             skill: {
+              id: "1",
               name: "JavaScript",
             },
             ability: 5,
