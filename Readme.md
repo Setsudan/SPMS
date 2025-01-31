@@ -321,31 +321,3 @@ You can also access it on [http://localhost:5000/api/docs](http://localhost:5000
   { "id": "124", "firstName": "Jane", "lastName": "Smith", "email": "janesmith@example.com" }
 ]
 ```
-
----
-
-## **Running Tests**
-
-To run unit tests:
-
-```sh
-yarn turbo test
-```
-
----
-
-## **Deployment**
-
-Using Docker:
-
-```sh
-docker-compose up --build -d
-```
-
-Using Kubernetes:
-
-```sh
-kubectl apply -f infra/k8s/deployment.yml
-```
-
----
