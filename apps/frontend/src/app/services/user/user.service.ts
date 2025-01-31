@@ -38,8 +38,8 @@ export class UserService {
   }
 
   getStudentsByGrade(gradeId: string): Observable<any[]> {
-    console.log('fetching', `${this.apiUrl}/grades/${gradeId}/students`);
-    return this.http.get<any[]>(`${this.apiUrl}/grades/${gradeId}/students`, {
+    console.log('fetching', `${environment.API_URL}/grades/${gradeId}/students`);
+    return this.http.get<any[]>(`${environment.API_URL}/grades/${gradeId}/students`, {
       headers: this.authService.getAuthHeaders(),
     });
   }
