@@ -55,6 +55,12 @@
       </li>
     </ul>
 
+    <button
+      *ngIf="!isOwnProfile()"
+      (click)="router.navigate(['chat/' + userProfile().id])"
+    >
+      Send Message
+    </button>
     <button *ngIf="isOwnProfile()" (click)="router.navigate(['edit-profile'])">
       Edit Profile
     </button>
